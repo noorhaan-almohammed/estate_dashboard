@@ -60,7 +60,7 @@ const InputField: React.FC<InputFieldProps> = ({
         value={value}
         onChange={handleChange}
         required={required}
-        className={`${className} border-2 border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm p-2 rounded ${
+        className={`${className} border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded ${
           error ? "border-red-500" : "border-gray-300"
         }`}
       />

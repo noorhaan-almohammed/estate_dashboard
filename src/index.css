@@ -1,1 +1,17 @@
 @import "tailwindcss";
+@theme {
+  /* Colors */
+  --color-bg: #141414;
+  --color-darkGray: #1a1a1a;
+  --color-mainText: #ffffff;
+  --color-secText: #999999;
+  --color-mainPurple: #703bf7;
+  --color-secPurple: #a685fa;
+  --color-hoverPurple: #5e2bd6;
+  --color-borderColor: #262626;
+  --color-overlay: #0a0a0a80;
+  --color-grayMedium: #4d4d4d;
+  --color-iconDisaled: #808080;
+  --color-star: #666;
+  --color-seconderyStar: #333;
+}

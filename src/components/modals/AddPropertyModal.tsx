@@ -126,19 +126,19 @@ export default function AddPropertyModal({
         onSubmit={handleSubmit}
         className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
       >
-        <h2 className="text-2xl text-[#333] font-bold mb-4">Add Property</h2>
+        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Property</h2>
         <div className="flex justify-between gap-8">
           <div className="flex flex-col w-1/2 gap-2">
-            <h3 className="text-xl text-[#333] font-bold">Basic info</h3>
+            <h3 className="text-xl text-seconderyStar font-bold">Basic info</h3>
             <div className="flex items-center justify-between gap-2">
               <InputField  placeholder="Type" name="type" onChange={handleInputChange}/>
               <InputField placeholder="Name" name="name" onChange={handleInputChange} />
-              <InputField name="location"   placeholder="Location"  onChange={handleInputChange} />
+              <InputField name="location" placeholder="Location"  onChange={handleInputChange} />
               <InputField name="price" type="number" placeholder="Price" onChange={handleInputChange} />
             </div>
           </div>
           <div className="flex flex-col w-1/2 gap-2">
-            <h3 className="text-xl text-[#333] font-bold">Static info</h3>
+            <h3 className="text-xl text-seconderyStar font-bold">Static info</h3>
             <div className="flex items-center justify-between gap-2">
               <InputField name="bedrooms" type="number" placeholder="Bedrooms" onChange={handleInputChange}/>
               <InputField name="bathrooms" type="number" placeholder="Bathrooms" onChange={handleInputChange}/>
@@ -148,17 +148,27 @@ export default function AddPropertyModal({
           </div>
         </div>
 
-        <h3 className="text-xl text-[#333] font-bold">
+        <h3 className="text-xl text-seconderyStar font-bold">
           Description & Features
         </h3>
         <div className="flex justify-between gap-2">
-          <textarea
+          <div className="flex flex-col w-1/2 gap-2">
+            <InputField placeholder="Tag Description" name="tag_description" onChange={handleInputChange} />           
+            <textarea
             name="description"
             placeholder="Property description"
             onChange={handleChange}
-            className="w-1/2 border-2 border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
+            className=" border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
             required
           />
+          <textarea
+            name="feature_description"
+            placeholder="Feature Property description"
+            onChange={handleChange}
+            className=" border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
+            required
+          />
+          </div>
           <div className="flex w-1/2 gap-2">
             <div className="flex flex-col w-full gap-2">
               {features.map((feature, index) => (
@@ -168,7 +178,7 @@ export default function AddPropertyModal({
                   placeholder={`Feature ${index + 1}`}
                   value={feature}
                   onChange={(e) => handleFeatureChange(index, e.target.value)}
-                  className="w-full border-2 border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
+                  className="w-full border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
                   required
                 />
               ))}
@@ -176,7 +186,7 @@ export default function AddPropertyModal({
             <button
               type="button"
               onClick={addFeatureField}
-              className="bg-[#703BF7] text-xl font-bold aspect-square w-11 h-11 flex items-center justify-center text-white p-1 rounded cursor-pointer hover:bg-[#5e2bd6]"
+              className="bg-mainPurple text-xl font-bold aspect-square w-11 h-11 flex items-center justify-center text-white p-1 rounded cursor-pointer hover:bg-hoverPurple"
             >
               +
             </button>
@@ -184,7 +194,7 @@ export default function AddPropertyModal({
         </div>
         <div className="flex justify-between gap-8">
           <div className="flex flex-col gap-2">
-            <h3 className="text-xl text-[#333] font-bold">Additional Fees</h3>
+            <h3 className="text-xl text-seconderyStar font-bold">Additional Fees</h3>
             <div className="flex items-center flex-wrap gap-1.5">
               <InputField name="transfer_tax" type="number" placeholder="Transfer Tax" onChange={handleInputChange} className=""/>
               <InputField name="legal_fees" type="number" placeholder="Legal Fees" onChange={handleInputChange} className=""/>
@@ -196,7 +206,7 @@ export default function AddPropertyModal({
             </div>
           </div>
           <div className="flex flex-col gap-2">
-            <h3 className="text-xl text-[#333] font-bold">Total Initial Costs</h3>
+            <h3 className="text-xl text-seconderyStar font-bold">Total Initial Costs</h3>
             <div className="flex items-center flex-wrap gap-1.5">
               <InputField name="listing_price" type="number" placeholder="Listing Price" onChange={handleInputChange} className=""/>
               <InputField name="total_additional_fees" type="number" placeholder="Add Fees Total" onChange={handleInputChange} className=" "/>
@@ -208,11 +218,11 @@ export default function AddPropertyModal({
             </div>
           </div>
         </div>
-        <h3 className="text-xl text-[#333] font-bold">Upload Images</h3>
+        <h3 className="text-xl text-seconderyStar font-bold">Upload Images</h3>
         <div className="flex items-center gap-2">
           <div className="relative w-fit flex items-center justify-center">
             <input
-              className="border-2 text-transparent p-1 rounded bg-[#703BF7] hover:bg-[#5e2bd6] aspect-square w-11 h-11 cursor-pointer"
+              className="border-2 text-transparent p-1 rounded bg-mainPurple hover:bg-hoverPurple aspect-square w-11 h-11 cursor-pointer"
               type="file"
               accept=".png, .jpg, .jpeg, .webp"
               multiple
@@ -222,7 +232,7 @@ export default function AddPropertyModal({
               +
             </label>
           </div>
-          {uploading && <p className="text-[#333]">Uploading images...</p>}
+          {uploading && <p className="text-seconderyStar">Uploading images...</p>}
 
           <div className="flex gap-2 flex-wrap mt-2">
             {imageUrls.map((url, i) => (
@@ -245,7 +255,7 @@ export default function AddPropertyModal({
           </button>
           <button
             type="submit"
-            className="bg-[#703BF7] hover:bg-[#5e2bd6] cursor-pointer text-white px-4 py-2 rounded"
+            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Property"}

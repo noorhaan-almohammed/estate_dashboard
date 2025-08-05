@@ -3,6 +3,7 @@ import { useParams, Link } from "react-router-dom";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../firebaseConfig";
 import ImageSlider from "../components/ImageSlider";
+import InfoItem from "../components/InfoItem";
 
 export default function PropertyPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,9 +34,12 @@ export default function PropertyPage() {
   return (
     <div className="max-w-[90%] mx-auto p-6 space-y-8">
       <div>
-        <Link to="/propertiesdashboard" className="font-semibold cursor-pointer px-4 py-2 rounded-full text-lg bg-[#703BF7] text-white hover:bg-[#5e2bd6] ">
-        Back to list
-      </Link>
+        <Link
+          to="/properties-dashboard"
+          className="font-semibold cursor-pointer px-4 py-2 rounded-full text-lg bg-mainPurple text-white hover:bg-hoverPurple "
+        >
+          Back to list
+        </Link>
       </div>
 
       <div>
@@ -50,11 +54,16 @@ export default function PropertyPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <InfoItem label="Type" value={property.type} />
         <InfoItem label="Price" value={property.price} isCurrency />
-        <InfoItem label="Listing Price" value={property.listing_price} isCurrency />
+        <InfoItem
+          label="Listing Price"
+          value={property.listing_price}
+          isCurrency
+        />
         <InfoItem label="Bedrooms" value={property.bedrooms} />
         <InfoItem label="Bathrooms" value={property.bathrooms} />
         <InfoItem label="Area" value={property.area} unit="m²" />
         <InfoItem label="Build Year" value={property.build_year} />
+        <InfoItem label="Tag Description" value={property.tag_description} />
         <InfoItem
           label="Created At"
           value={
@@ -69,7 +78,10 @@ export default function PropertyPage() {
         <h2 className="text-xl font-semibold mb-2">Description</h2>
         <p className="text-gray-700">{property.description}</p>
       </div>
-
+      <div>
+        <h2 className="text-xl font-semibold mb-2">Feature Description</h2>
+        <p className="text-gray-700">{property.feature_description}</p>
+      </div>
       {property.features?.length > 0 && (
         <div>
           <h2 className="text-xl font-semibold mb-2">Features</h2>
@@ -134,34 +146,6 @@ export default function PropertyPage() {
           />
         </div>
       </div>
-    </div>
-  );
-}
-
-function InfoItem({
-  label,
-  value,
-  isCurrency = false,
-  unit = "",
-}: {
-  label: string;
-  value: string | number | undefined;
-  isCurrency?: boolean;
-  unit?: string;
-}) {
-  const displayValue =
-    value === undefined || value === null || value === ""
-      ? "-"
-      : isCurrency
-      ? `$${value}`
-      : unit
-      ? `${value} ${unit}`
-      : value;
-
-  return (
-    <div className="flex justify-between border-b pb-1">
-      <span className="font-medium text-gray-800">{label}</span>
-      <span>{displayValue}</span>
     </div>
   );
 }

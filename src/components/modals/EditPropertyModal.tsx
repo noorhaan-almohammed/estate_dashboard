@@ -13,6 +13,8 @@ export interface Property {
   area: number;
   build_year: string;
   description: string;
+  feature_description: string;
+  tag_description:string;
   down_payment: number;
   mortgage_amount: number;
   mortgage_fees: number;
@@ -48,7 +50,9 @@ export default function EditPropertyModal({
     type: property.type || "",
     location: property.location || "",
     price: property.price || "",
+    tag_description:property.tag_description || "",
     description: property.description || "",
+    feature_description: property.feature_description || "",
     bedrooms: property.bedrooms || "",
     bathrooms: property.bathrooms || "",
     area: property.area || "",
@@ -184,7 +188,7 @@ export default function EditPropertyModal({
                     value={(formData as any)[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    className="w-35 lg:w-full border-2 p-2 rounded"
+                    className="w-35 lg:w-full border-2 p-2 rounded border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm"
                     required
                   />
                 </div>
@@ -214,7 +218,7 @@ export default function EditPropertyModal({
                     value={(formData as any)[field.name]}
                     onChange={handleChange}
                     placeholder={field.placeholder}
-                    className="w-35 lg:w-full border-2 p-2 rounded"
+                    className="w-35 lg:w-full border-2 p-2 rounded border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm"
                     required
                   />
                 </div>
@@ -227,13 +231,31 @@ export default function EditPropertyModal({
           Description & Features
         </h3>
         <div className="flex justify-between gap-2">
+          <div className="flex flex-col w-1/2 gap-2">
+            <input
+              name="tag_description"
+              type="text"
+              value={property.tag_description}
+              onChange={handleChange}
+              placeholder="Tag Description"
+              className="w-full border-2 p-2 rounded border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm"
+              required
+            />
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             placeholder="Description"
-            className="w-1/2 border-2 border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
+            className=" border-2 border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
           />
+          <textarea
+            name="feature_description"
+            value={formData.feature_description}
+            onChange={handleChange}
+            placeholder="Feature Description"
+            className=" border-2 border-gray-400 text-[#333] placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
+          />
+          </div>
           <div className="flex w-1/2 gap-2">
             <div className="flex flex-col w-full gap-2">
               {features.map((feature, index) => (
@@ -260,7 +282,7 @@ export default function EditPropertyModal({
             <button
               type="button"
               onClick={addFeatureField}
-              className="bg-[#703BF7] text-xl font-bold aspect-square w-11 h-11 flex items-center justify-center text-white p-1 rounded cursor-pointer hover:bg-[#5e2bd6]"
+              className="bg-mainPurple text-xl font-bold aspect-square w-11 h-11 flex items-center justify-center text-white p-1 rounded cursor-pointer hover:bg-hoverPurple"
             >
               +
             </button>
@@ -333,7 +355,7 @@ export default function EditPropertyModal({
         <div className="flex items-center gap-2">
           <div className="relative w-fit flex items-center justify-center">
             <input
-              className="border-2 text-transparent p-1 rounded bg-[#703BF7] hover:bg-[#5e2bd6] aspect-square w-11 h-11 cursor-pointer"
+              className="border-2 text-transparent p-1 rounded bg-mainPurple hover:bg-hoverPurple aspect-square w-11 h-11 cursor-pointer"
               type="file"
               accept=".png, .jpg, .jpeg, .webp"
               multiple
@@ -378,7 +400,7 @@ export default function EditPropertyModal({
           <button
             type="submit"
             disabled={loading}
-            className="bg-[#703BF7] hover:bg-[#5e2bd6] text-white px-4 py-2 rounded"
+            className="bg-mainPurple hover:bg-hoverPurple text-white px-4 py-2 rounded"
           >
             {loading ? "Updating..." : "Update Property"}
           </button>

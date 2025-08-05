@@ -60,7 +60,7 @@ export default function PropertiesPage() {
         <h2 className="text-2xl font-bold">All Properties</h2>
         <button
           onClick={() => setShowModal(true)}
-          className="bg-[#703BF7] text-white px-4 py-2 rounded-lg hover:bg-[#5e2bd6]"
+          className="bg-mainPurple text-white px-4 py-2 rounded-lg hover:bg-hoverPurple"
         >
           + Add Property
         </button>
