@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PropertiesPage from "./pages/dashboard/PropertiesPage";
 import PropertyPage from "./pages/PropertyPage";
-import StatsPage from "./pages/dashboard/statsPage";
+import StatsPage from "./pages/dashboard/StatsPage";
 import StatPage from "./pages/StatPage";
 import AchievementsPage from "./pages/dashboard/AchievementsPage";
 import AchievementPage from "./pages/AchievementPage";
