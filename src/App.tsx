@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PropertiesPage from "./pages/dashboard/PropertiesPage";
 import PropertyPage from "./pages/PropertyPage";
-import StatsPage from "./pages/dashboard/statsPage";
+import StatsPage from "./pages/dashboard/StatsPage";
 import StatPage from "./pages/StatPage";
 import AchievementsPage from "./pages/dashboard/AchievementsPage";
 import AchievementPage from "./pages/AchievementPage";
@@ -16,12 +16,14 @@ import FAQsPage from "./pages/dashboard/FAQsPage";
 import FAQPage from "./pages/FAQPage";
 import ReviewsPage from "./pages/dashboard/ReviewsPage";
 import ReviewPage from "./pages/ReviewPage";
+import HomePage from "./pages/dashboard/HomePage";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<DashboardLayout />}>
+          <Route index element={<HomePage/>} />
           <Route path="properties-dashboard" element={<PropertiesPage />} />
           <Route path={`property/:id`} element={<PropertyPage />} />
           {/* Stats =>  */}
