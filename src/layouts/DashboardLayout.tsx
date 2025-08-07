@@ -8,6 +8,7 @@ const links: {
   { label: "Stats", link: "/stats-dashboard" },
   { label: "Achievements", link: "/achievements-dashboard" },
   { label: "Team", link: "/team-dashboard" },
+  { label: "Clients", link: "/clients-dashboard" },
   { label: "Office Location", link: "/office-locations-dashboard" },
   { label: "FAQ", link: "/faq-dashboard" },
   { label: "Reviews", link: "/reviews-dashboard" },
