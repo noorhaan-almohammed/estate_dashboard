@@ -22,11 +22,7 @@ export default function DashboardLayout() {
         </h1>
         <nav className="space-y-4">
           {links.map(({ link, label }) => (
-            <Link
-              key={link}
-              to={link}
-              className="block hover:text-mainPurple"
-            >
+            <Link key={link} to={link} className="block hover:text-mainPurple">
               {label}
             </Link>
           ))}
