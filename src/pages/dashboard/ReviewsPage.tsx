@@ -2,6 +2,7 @@ import { useState } from "react";
 import AddReviewModal from "../../components/modals/AddReviewModal";
 import ReviewsList from "../../components/lists/ReviewsList";
 import testPhoto from "../../assets/cleint test.png";
+import EditReviewModal from "../../components/modals/EditReviewModal";
 
 export interface ReviewListData {
   id: number;
@@ -101,22 +102,19 @@ function ReviewsPage() {
       {addReviewModal && (
         <AddReviewModal
           onClose={() => {setAddReviewModal(false); setShowEditModal(false)}}
-          onSuccess={() => setAddReviewModal(false)}
-          showEditModal = {showEditModal}
         />
       )}
 
-      {/* {isLoading ? (
-                    <p>Loading...</p>
-                  ) : ( */}
+      {showEditModal && (
+        <EditReviewModal
+          onClose={() => setShowEditModal(false)}
+        />
+      )}
+
       <ReviewsList
         items={reviewListData}
         setShowEditModal={setShowEditModal}
-        setAddReviewModal={() => setAddReviewModal(true)}
-        // onEdit={(property) => setEditingProperty(property)}
-        // onDelete={handleDelete}
       />
-      {/* )} */}
     </div>
   );
 }

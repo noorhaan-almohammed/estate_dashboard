@@ -16,7 +16,7 @@ const onereview = {
 function ReviewPage() {
   // const { id } = useParams<{ id: string }>();
   return (
-    <div className="max-w-[90%] mx-auto p-6 space-y-8">
+    <div className="max-w-[90%] mx-auto p-6 space-y-8 h-screen flex flex-col">
       <div>
         <Link
           to="/reviews-dashboard"
@@ -26,7 +26,7 @@ function ReviewPage() {
         </Link>
         </div>
 
-        <div className="grid grid-cols-3 gap-5">
+        <div className="grid grid-cols-3 gap-5 flex-1 place-content-center">
           <div className="w-full h-80 rounded-xl overflow-hidden">
             <img src={onereview.profile} alt="image" className="object-cover w-full h-full" />
           </div>

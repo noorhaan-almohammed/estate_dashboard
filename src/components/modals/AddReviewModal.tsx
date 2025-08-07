@@ -1,82 +1,93 @@
-
-import InputField from '../InputField'
+import InputField from "../InputField";
 
 interface ReviewAddForm {
-    type: "text" | "number" | "email",
-        name: string,
-        holder: string,
-        min?: number,
-        max?: number,
+  type: "text" | "number" | "email";
+  name: string;
+  holder: string;
+  min?: number;
+  max?: number;
 }
 
 interface AddEditReviewModalProps {
   onClose: () => void;
-  onSuccess: () => void;
-  showEditModal: boolean;
 }
 
 const reviewAddForm: ReviewAddForm[] = [
-    {
-        type: "text",
-        name: "review_name",
-        holder: "Full Name",
-    },
-    {
-        type: "text",
-        name: "review_country",
-        holder: "Add Country",
-    },
-    {
-        type: "text",
-        name: "review_city",
-        holder: "Add City",
-    },
-    {
-        type: "text",
-        name: "review_title",
-        holder: "Add Title",
-    },
-    // {
-    //     type: "text",
-    //     name: "review_description",
-    //     holder: "Add description",
-    //     min: 50,
-    //     max: 300,
-    // },
-]
+  {
+    type: "text",
+    name: "review_name",
+    holder: "Full Name",
+  },
+  {
+    type: "text",
+    name: "review_country",
+    holder: "Add Country",
+  },
+  {
+    type: "text",
+    name: "review_city",
+    holder: "Add City",
+  },
+  {
+    type: "text",
+    name: "review_title",
+    holder: "Add Title",
+  },
+];
 
 const AddReviewModal = ({
   onClose,
-//   onSuccess,
-showEditModal
 }: AddEditReviewModalProps) => {
-
-    const ratingStars : number[] = [1, 2, 3 , 4, 5];
-    const handleInputChange = () => {
-        console.log("hahahaha")
-    }
+  const ratingStars: number[] = [1, 2, 3, 4, 5];
+  const handleInputChange = () => {
+    console.log("hahahaha");
+  };
   return (
-    <div className='fixed inset-0 w-screen bg-[#333333]/80 bg-opacity-10 flex flex-col justify-center items-center z-50'>
+    <div className="fixed inset-0 w-screen bg-[#333333]/80 bg-opacity-10 flex flex-col justify-center items-center z-50">
       <form className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] lg:w-[75%] shadow-lg">
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Review</h2>
-            <h3 className='text-xl text-seconderyStar font-bold'>Review info</h3>
-        <div className='flex items-center gap-5'>
-            <label htmlFor="rating" className='text-lg font-semibold'>Rating:</label>
-            <select name="rating" id="rating" className='border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded'>
+        <h2 className="text-2xl text-seconderyStar font-bold mb-4">
+          Add Review
+        </h2>
+        <h3 className="text-xl text-seconderyStar font-bold">Review info</h3>
+        <div className="flex items-center gap-5">
+          <label htmlFor="rating" className="text-lg font-semibold">
+            Rating:
+          </label>
+          <select
+            name="rating"
+            id="rating"
+            className="border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
+          >
             {ratingStars.map((rate, index) => (
-                <option key={index} value={rate}>{rate}</option>
+              <option key={index} value={rate}>
+                {rate}
+              </option>
             ))}
-        </select>
+          </select>
         </div>
 
-        <div className='w-full grid grid-cols-2 gap-4'>
-            {reviewAddForm.map(item => (
-            <InputField key={item.name} name={item.name} type={item.type} placeholder={item.holder} onChange={handleInputChange}   />
-        ))}
+        <div className="w-full grid grid-cols-2 gap-4">
+          {reviewAddForm.map((item) => (
+            <InputField
+              key={item.name}
+              name={item.name}
+              type={item.type}
+              placeholder={item.holder}
+              onChange={handleInputChange}
+            />
+          ))}
         </div>
 
-        <div className='w-full'>
-            <textarea className='w-full border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded' name="review_description" id="review_description" placeholder='Add description' minLength={50} maxLength={300} onChange={handleInputChange}></textarea>
+        <div className="w-full">
+          <textarea
+            className="w-full border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
+            name="review_description"
+            id="review_description"
+            placeholder="Add description"
+            minLength={50}
+            maxLength={300}
+            onChange={handleInputChange}
+          ></textarea>
         </div>
 
         <div className="flex items-center gap-2">
@@ -86,7 +97,7 @@ showEditModal
               type="file"
               accept=".png, .jpg, .jpeg, .webp"
               multiple
-            //   onChange={handleImageUpload}
+              //   onChange={handleImageUpload}
             />
             <label className="absolute text-xl font-bold flex items-center justify-center text-white">
               +
@@ -125,16 +136,13 @@ showEditModal
           <button
             type="submit"
             className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-            // disabled={loading}
           >
-            {showEditModal ? "Update Review" : "Add Review"}
-            {/* {loading ? "Adding..." : "Add Review"} */}
+            Add Review
           </button>
         </div>
-
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default AddReviewModal
+export default AddReviewModal;

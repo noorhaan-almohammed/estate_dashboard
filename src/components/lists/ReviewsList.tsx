@@ -5,13 +5,9 @@ import type { Dispatch, SetStateAction } from "react";
 const ReviewsList = ({
   items,
   setShowEditModal,
-  setAddReviewModal,
 }: {
   items: ReviewListData[];
   setShowEditModal: Dispatch<SetStateAction<boolean>>;
-  setAddReviewModal: (value: React.SetStateAction<boolean>) => void;
-  //   onEdit: (property: any) => void;
-  //   onDelete: (id: string) => void;
 }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -46,16 +42,13 @@ const ReviewsList = ({
               className="text-green-600 cursor-pointer"
               onClick={() => {
                 setShowEditModal(true);
-                setAddReviewModal(true);
               }}
-              //  onClick={() => onEdit(review)}
             >
               Edit
             </button>
 
             <button
               className="text-red-600 cursor-pointer"
-              //   onClick={() => onDelete(review.id)}
             >
               Delete
             </button>
