@@ -10,6 +10,7 @@ const links: {
   { label: "Team", link: "/team-dashboard" },
   { label: "Office Location", link: "/office-locations-dashboard" },
   { label: "FAQ", link: "/faq-dashboard" },
+  { label: "Clients", link: "/clients-dashboard" },
   { label: "Reviews", link: "/reviews-dashboard" },
 ];
 
