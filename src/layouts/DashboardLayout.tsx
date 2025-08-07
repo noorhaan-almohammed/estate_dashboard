@@ -18,7 +18,7 @@ export default function DashboardLayout() {
     <div className="flex h-screen overflow-hidden">
       <aside className="xl:w-64 w-52 bg-[#1A1A1A] text-white p-6">
         <h1 className="text-2xl font-bold mb-6">
-          <Link to="/home-dashboard">Dashboard</Link>
+          <Link to="/">Dashboard</Link>
         </h1>
         <nav className="space-y-4">
           {links.map(({ link, label }) => (
