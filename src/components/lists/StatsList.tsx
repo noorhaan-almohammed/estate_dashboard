@@ -14,11 +14,11 @@ export default function StatsList({
       {items.map((stat) => (
         <div key={stat.id} className="border rounded-xl p-6 shadow hover:shadow-md transition-shadow">
           <div className="flex items-center gap-4 mb-4">
-            {stat.icon && (
+           {/* {stat.icon && (
               <div className="bg-mainPurple text-white p-3 rounded-full">
-                {/* <FontAwesomeIcon icon={stat.icon} className="text-xl" /> */}
+                 <FontAwesomeIcon icon={stat.icon} className="text-xl" /> 
               </div>
-            )}
+            )}*/}
             <div>
               <h3 className="text-xl font-bold">{stat.title}</h3>
               <p className="text-2xl font-bold text-mainPurple">{stat.value}</p>

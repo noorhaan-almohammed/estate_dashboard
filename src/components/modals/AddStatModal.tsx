@@ -71,7 +71,7 @@ export default function AddStatModal({ onClose, onSuccess }: AddStatModalProps) 
           </div>
         </div>
 
-        <div className="mb-4">
+        {/* <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Icon (FontAwesome class)</label>
           <input
             name="icon"
@@ -80,7 +80,7 @@ export default function AddStatModal({ onClose, onSuccess }: AddStatModalProps) 
             placeholder="fas fa-chart-line"
             className="w-full border-2 border-gray-400 p-2 rounded"
           />
-        </div>
+        </div> */}
 
         <div className="mb-6">
           <label className="block text-sm font-medium mb-1">Description</label>
