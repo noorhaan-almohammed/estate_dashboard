@@ -15,12 +15,14 @@ import ClientPage from "./pages/ClientPage";
 import FAQListPage from "./components/lists/FAQListPage";
 import ReviewsPage from "./pages/dashboard/ReviewsPage";
 import ReviewPage from "./pages/ReviewPage";
+import HomePage from "./pages/dashboard/HomePage";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<DashboardLayout />}>
+          <Route index element={<HomePage/>} />
           <Route path="properties-dashboard" element={<PropertiesPage />} />
           <Route path={`property/:id`} element={<PropertyPage />} />
           {/* Stats =>  */}
