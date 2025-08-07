@@ -9,7 +9,7 @@ interface InputFieldProps {
   required?: boolean;
   min?: number;
   max?: number;
-  className ?: string
+  className ?: string;
 }
 
 const InputField: React.FC<InputFieldProps> = ({
@@ -21,7 +21,7 @@ const InputField: React.FC<InputFieldProps> = ({
   required = true,
   min,
   max,
-  className = "w-full"
+  className = "w-full",
 }) => {
   const [error, setError] = useState("");
 
