@@ -32,11 +32,11 @@ export default function PropertyPage() {
     return <p className="text-center text-red-600 mt-8">Property not found.</p>;
 
   return (
-    <div className="max-w-[90%] mx-auto p-6 space-y-8">
+    <div className="w-full px-4 py-8 xl:px-8 space-y-15 bg-bg">
       <div>
         <Link
           to="/properties-dashboard"
-          className="font-semibold cursor-pointer px-4 py-2 rounded-full text-lg bg-mainPurple text-white hover:bg-hoverPurple "
+          className="font-semibold cursor-pointer px-4 py-2 rounded-full text-lg bg-mainPurple text-mainText hover:bg-hoverPurple "
         >
           Back to list
         </Link>
@@ -47,11 +47,13 @@ export default function PropertyPage() {
           <ImageSlider images={property.imageUrls} />
         )}
 
-        <h1 className="text-3xl font-bold">{property.name}</h1>
-        <p className="text-gray-600">{property.location}</p>
+        
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <h1 className="text-5xl font-semibold text-mainText mb-3 ">{property.name}</h1>
+        <p className="text-secText text-lg font-medium">{property.location}</p>
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:pl-4">
         <InfoItem label="Type" value={property.type} />
         <InfoItem label="Price" value={property.price} isCurrency />
         <InfoItem
@@ -75,27 +77,8 @@ export default function PropertyPage() {
       </div>
 
       <div>
-        <h2 className="text-xl font-semibold mb-2">Description</h2>
-        <p className="text-gray-700">{property.description}</p>
-      </div>
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Feature Description</h2>
-        <p className="text-gray-700">{property.feature_description}</p>
-      </div>
-      {property.features?.length > 0 && (
-        <div>
-          <h2 className="text-xl font-semibold mb-2">Features</h2>
-          <ul className="list-disc list-inside text-gray-700">
-            {property.features.map((feature: string, idx: number) => (
-              <li key={idx}>{feature}</li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      <div>
-        <h2 className="text-xl font-semibold mb-2">Financial Breakdown</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-700">
+        <h2 className="text-2xl font-semibold text-mainText mb-4">Financial Breakdown</h2>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 text-sm lg:pl-4">
           <InfoItem
             label="Down Payment"
             value={property.down_payment}
@@ -145,6 +128,24 @@ export default function PropertyPage() {
             isCurrency
           />
         </div>
+      </div>
+      {property.features?.length > 0 && (
+        <div>
+          <h2 className="text-2xl text-mainText font-semibold mb-3">Features</h2>
+          <ul className="list-disc list-inside text-secText marker:text-mainPurple pl-4">
+            {property.features.map((feature: string, idx: number) => (
+              <li key={idx}>{feature}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <div>
+        <h2 className="text-2xl text-mainText font-semibold mb-3">Feature Description</h2>
+        <p className="text-secText lg:pl-4">{property.feature_description}</p>
+      </div>
+      <div>
+        <h2 className="text-2xl text-mainText font-semibold mb-3">Description</h2>
+        <p className="text-secText w-full md:w-1/2 lg:pl-4">{property.description}</p>
       </div>
     </div>
   );
