@@ -8,6 +8,7 @@ const links: {
   { label: "Stats", link: "/stats-dashboard" },
   { label: "Achievements", link: "/achievements-dashboard" },
   { label: "Team", link: "/team-dashboard" },
+  { label: "Clients", link: "/clients-dashboard" },
   { label: "Office Location", link: "/office-locations-dashboard" },
   { label: "FAQ", link: "/faq-dashboard" },
   { label: "Reviews", link: "/reviews-dashboard" },
@@ -18,15 +19,11 @@ export default function DashboardLayout() {
     <div className="flex h-screen overflow-hidden">
       <aside className="xl:w-64 w-52 bg-[#1A1A1A] text-white p-6">
         <h1 className="text-2xl font-bold mb-6">
-          <Link to="/home-dashboard">Dashboard</Link>
+          <Link to="/">Dashboard</Link>
         </h1>
         <nav className="space-y-4">
           {links.map(({ link, label }) => (
-            <Link
-              key={link}
-              to={link}
-              className="block hover:text-mainPurple"
-            >
+            <Link key={link} to={link} className="block hover:text-mainPurple">
               {label}
             </Link>
           ))}

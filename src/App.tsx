@@ -22,7 +22,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/" element={<DashboardLayout />}>
-          <Route index element={<HomePage/>} />
+          <Route index element={<HomePage />} />
           <Route path="properties-dashboard" element={<PropertiesPage />} />
           <Route path={`property/:id`} element={<PropertyPage />} />
           {/* Stats =>  */}
@@ -45,7 +45,7 @@ function App() {
           />
           {/* clients */}
           <Route path="clients-dashboard" element={<ClientsPage />} />
-          <Route path={`clients/:id`} element={<ClientPage />} />
+          <Route path={`client/:id`} element={<ClientPage />} />
           {/* FAQ */}
           <Route path="faq-dashboard" element={<FAQListPage />} />
           {/* Reviews */}
