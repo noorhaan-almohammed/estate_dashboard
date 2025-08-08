@@ -8,16 +8,16 @@ const links: {
   { label: "Stats", link: "/stats-dashboard" },
   { label: "Achievements", link: "/achievements-dashboard" },
   { label: "Team", link: "/team-dashboard" },
+  { label: "Clients", link: "/clients-dashboard" },
   { label: "Office Location", link: "/office-locations-dashboard" },
   { label: "FAQ", link: "/faq-dashboard" },
-  { label: "Clients", link: "/clients-dashboard" },
   { label: "Reviews", link: "/reviews-dashboard" },
 ];
 
 export default function DashboardLayout() {
   return (
     <div className="flex h-screen overflow-hidden">
-      <aside className="w-64 bg-[#1A1A1A] text-white p-6">
+      <aside className="xl:w-64 w-52 bg-[#1A1A1A] text-white p-6">
         <h1 className="text-2xl font-bold mb-6">
           <Link to="/">Dashboard</Link>
         </h1>
