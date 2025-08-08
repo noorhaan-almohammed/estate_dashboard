@@ -19,9 +19,9 @@ function InfoItem({
       : value;
 
   return (
-    <div className="flex justify-between border-b pb-1">
-      <span className="font-medium text-gray-800">{label}</span>
-      <span>{displayValue}</span>
+    <div className="flex justify-between border border-borderColor p-4 rounded-xl shadow-lg hover:border-hoverPurple">
+      <span className="font-medium text-mainText text-xl">{label}</span>
+      <span className=" text-secPurple text-lg">{displayValue}</span>
     </div>
   );
 }
