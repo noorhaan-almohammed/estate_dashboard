@@ -64,7 +64,7 @@ function HomePage() {
         },
         },
     };
-    // Pie Chart 
+    // Lin Chart 
     // Data for the Line chart
     const lineData = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June'], 
@@ -185,40 +185,40 @@ function HomePage() {
         },
     ]
     return (
-        <div className="p-7 min-h-screen bg-bg flex flex-col  gap-9">
+        <div className="p-5 min-h-screen bg-bg flex flex-col  gap-5 justify-between">
             <div>
                 <h1 className="text-4xl font-semibold text-mainText">Welcome to the  Estatein Dashboard 👋</h1>
                 <p className="text-lg font-medium mt-3 text-secText">We're glad to have you back! You can start managing your properties from the sidebar.</p>
             </div>
-            <div className="flex flex-col-reverse xl:flex-row justify-between gap-5">
-                <div className="flex flex-col justify-between gap-5 xl:w-[48%] w-full">
+            <div className="flex flex-col xl:flex-row justify-between gap-5 ">
+                <div className="xl:w-[48%] w-full">
+                    <img className="w-full h-[370px] object-cover rounded-xl" src="/assets/images/modernCitySliderCard3.webp" alt="" />
+                </div>
+                <div className="flex flex-col justify-between gap-3 xl:w-[48%] w-full">
                         <div className="flex gap-5 justify-between  w-full">
                             {Cards.map((card,id) => {
                                 return(
                                     <div key={id} className="bg-darkGray w-[30%] py-3.5 px-6 rounded-xl ">
                                         <img src={card.icon} alt="people icon" />
-                                        <p className="text-mainText text-2xl font-bold mb-2 mt-4">{card.number}</p>
+                                        <p className="text-mainText text-2xl font-bold my-2 ">{card.number}</p>
                                         <p className="text-secText font-semibold text-base ">{card.title}</p>
                                     </div>
                                 )
                             })}
                         </div>
                         {/* Pie Chart */}
-                        <div className="w-full h-fit bg-darkGray p-6 rounded-2xl " >
+                        <div className="w-full  bg-darkGray p-6 rounded-2xl " >
                             <Pie data={data} options={options} />
                         </div>
                 </div>
-                <div className="xl:w-[48%] w-full">
-                    <img className="w-full h-[360px] object-cover rounded-xl" src="/assets/images/modernCitySliderCard3.webp" alt="" />
-                </div>
             </div>
-            <div className="flex xl:flex-row flex-col gap-5 justify-between">
+            <div className="flex xl:flex-row flex-col gap-5 justify-between ">
                 {/* Line Chart */}
-                <div className="xl:w-[48%] w-full h-[360px] bg-darkGray  p-6 rounded-2xl ">
+                <div className="xl:w-[48%] w-full  bg-darkGray  p-6 rounded-2xl ">
                     <Line data={lineData} options={lineoptions} />
                 </div>
                 {/* Bar Chart */}
-                <div className="xl:w-[48%] w-full h-[360px] bg-darkGray  p-6 rounded-2xl ">
+                <div className="xl:w-[48%] h-[300px]  w-full  bg-darkGray  p-6 rounded-2xl ">
                     <Bar data={bardata} options={baroptions} />
                 </div>
             </div>
