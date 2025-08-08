@@ -1,94 +1,147 @@
-import InputField from '../InputField';
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { doc, updateDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
 
-
-interface TeamAddForm {
-  type: "text" | "number" | "email";
+interface TeamMember {
+  id: string;
   name: string;
-  holder: string;
-  min?: number;
-  max?: number;
+  position: string;
+  profileImage: string;
+  createdAt: any;
 }
 
-interface AddTeamModalProps {
+interface EditTeamModalProps {
   onClose: () => void;
+  onSuccess: () => void;
+  member: TeamMember;
 }
 
-const teamAddForm: TeamAddForm[] = [
-  {
-    type: "text",
-    name: "team_name",
-    holder: "Full Name",
-  },
-  {
-    type: "text",
-    name: "team_position",
-    holder: "Add Position",
-  },
-];
+const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dxwb3czjn/image/upload";
+const CLOUDINARY_UPLOAD_PRESET = "unsigned_upload";
 
-const EditTeamModal = ({
+export default function EditTeamModal({
   onClose,
-}: AddTeamModalProps) => {
+  onSuccess,
+  member,
+}: EditTeamModalProps) {
+  const [formData, setFormData] = useState({
+    name: member.name || "",
+    position: member.position || "",
+  });
+  const [profileImage, setProfileImage] = useState(member.profileImage || "");
+  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = () => {
-    console.log("hahahaha");
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("folder", "team");
+
+      const res = await fetch(CLOUDINARY_UPLOAD_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.secure_url) {
+        setProfileImage(data.secure_url);
+      } else {
+        throw new Error(data.error?.message || "Upload failed");
+      }
+    } catch (err) {
+      console.error("Image upload error:", err);
+      alert("Image upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const memberRef = doc(db, "team", member.id);
+      await updateDoc(memberRef, {
+        ...formData,
+        profileImage,
+        updatedAt: serverTimestamp(),
+      });
+
+      onSuccess();
+      onClose();
+    } catch (err) {
+      console.error("Error updating team member:", err);
+      alert("Failed to update team member.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 w-screen bg-[#333333]/80 bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] lg:w-[75%] shadow-lg">
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">
-          Edit Member
-        </h2>
-        <h3 className="text-xl text-seconderyStar font-bold">Member info</h3>
-
-        <div className="w-full grid grid-cols-2 gap-4">
-          {teamAddForm.map((item) => (
-            <InputField
-              key={item.name}
-              name={item.name}
-              type={item.type}
-              placeholder={item.holder}
-              onChange={handleInputChange}
-            />
-          ))}
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative w-fit flex items-center justify-center">
+    <div className="fixed inset-0 w-screen bg-[#3333334e] bg-opacity-10 flex flex-col justify-center items-center z-50">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
+      >
+        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Edit Team Member</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">Name</label>
             <input
-              className="border-2 text-transparent p-1 rounded bg-mainPurple hover:bg-hoverPurple aspect-square w-11 h-11 cursor-pointer"
-              type="file"
-              accept=".png, .jpg, .jpeg, .webp"
-              multiple
-              //   onChange={handleImageUpload}
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              className="border-2 border-gray-400 p-2 rounded"
+              required
             />
-            <label className="absolute text-xl font-bold flex items-center justify-center text-white">
-              +
-            </label>
           </div>
-          {/* {uploading && <p className="text-seconderyStar">Uploading images...</p>} */}
-
-          {/* <div className="flex gap-2 flex-wrap mt-2">
-            {imageUrls.map((url, i) => (
-              <div key={idx} className="relative w-24 h-24">
-                <img
-                  src={url}
-                  alt={`image-${idx}`}
-                  className="w-full h-full object-cover rounded"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(url)}
-                  className="absolute top-[-6px] right-[-6px] bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"
-                  title="Remove image"
-                >
-                  ✕
-                </button>
-              </div>
-             ))}
-          </div> */}
+          
+          <div className="flex flex-col">
+            <label className="mb-1 text-sm font-medium">Position</label>
+            <input
+              name="position"
+              value={formData.position}
+              onChange={handleChange}
+              className="border-2 border-gray-400 p-2 rounded"
+              required
+            />
+          </div>
+          
+          <div className="flex flex-col md:col-span-2">
+            <label className="mb-1 text-sm font-medium">Profile Image</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleImageUpload}
+              className="border-2 border-gray-400 p-2 rounded"
+            />
+            {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
+            {profileImage && (
+              <img 
+                src={profileImage} 
+                alt="Profile Preview" 
+                className="w-32 h-32 rounded-full object-cover mt-2 mx-auto"
+              />
+            )}
+          </div>
         </div>
+
         <div className="flex justify-end gap-2">
           <button
             type="button"
@@ -99,14 +152,13 @@ const EditTeamModal = ({
           </button>
           <button
             type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
+            disabled={loading || uploading}
+            className="bg-mainPurple hover:bg-hoverPurple text-white px-4 py-2 rounded"
           >
-            Update Member
+            {loading ? "Updating..." : "Update Member"}
           </button>
         </div>
       </form>
     </div>
-  )
+  );
 }
-
-export default EditTeamModal

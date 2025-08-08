@@ -1,109 +1,94 @@
-import { useState } from "react";
-import AddTeamModal from "../../components/modals/AddTeamModal";
+import { useEffect, useState } from "react";
+import { db } from "../../firebaseConfig";
+import {
+  collection,
+  onSnapshot,
+  deleteDoc,
+  doc,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import TeamList from "../../components/lists/TeamList";
-import testPhoto from "../../assets/cleint test.png";
+import AddTeamModal from "../../components/modals/AddTeamModal";
 import EditTeamModal from "../../components/modals/EditTeamModal";
 
-export interface TeamListData {
-  id: number;
+export default function TeamPage() {
+  const [showModal, setShowModal] = useState(false);
+  const [editingMember, setEditingMember] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [loadedItems, setLoadedItems] = useState<any[]>([]);
 
-  name: string;
-  position: string;
+  useEffect(() => {
+    setIsLoading(true);
+    const teamRef = collection(db, "team");
+    const q = query(teamRef, orderBy("createdAt", "desc"));
 
-  profile: string;
-}
+    const unsubscribe = onSnapshot(
+      q,
+      (snapshot) => {
+        const items: any[] = [];
+        snapshot.forEach((doc) => {
+          items.push({ id: doc.id, ...doc.data() });
+        });
+        setLoadedItems(items);
+        setIsLoading(false);
+      },
+      (error) => {
+        console.error("Error fetching team members:", error);
+        setIsLoading(false);
+      }
+    );
 
-const teamListData: TeamListData[] = [
-  {
-    id: 1,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 2,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 3,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 4,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 5,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 6,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 7,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 8,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-  {
-    id: 9,
-    name: "younis issa",
-    position: "CEO",
-    profile: testPhoto,
-  },
-];
+    return () => unsubscribe();
+  }, []);
 
-function TeamPage() {
-  const [addTeamModal, setAddTeamModal] = useState(false);
-    const [showEditModal, setShowEditModal] = useState(false);
+  const handleDelete = async (memberId: string) => {
+    if (!window.confirm("Are you sure you want to delete this team member?")) {
+      return;
+    }
+    try {
+      await deleteDoc(doc(db, "team", memberId));
+    } catch (error) {
+      console.error("Failed to delete team member:", error);
+    }
+  };
+
   return (
     <div className="p-6">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">All Team Members</h2>
+        <h2 className="text-2xl font-bold">Our Team</h2>
         <button
-          onClick={() => setAddTeamModal(true)}
+          onClick={() => setShowModal(true)}
           className="bg-mainPurple text-white px-4 py-2 rounded-lg hover:bg-hoverPurple"
         >
           + Add Member
         </button>
       </div>
 
-      {addTeamModal && (
+      {showModal && (
         <AddTeamModal
-          onClose={() => setAddTeamModal(false)}
+          onClose={() => setShowModal(false)}
+          onSuccess={() => setShowModal(false)}
         />
       )}
 
-
-      {showEditModal && (
+      {editingMember && (
         <EditTeamModal
-          onClose={() => setShowEditModal(false)}
+          member={editingMember}
+          onClose={() => setEditingMember(null)}
+          onSuccess={() => setEditingMember(null)}
         />
       )}
 
-      <TeamList
-        items={teamListData}
-        setShowEditModal={setShowEditModal}
-      />
+      {isLoading ? (
+        <p>Loading...</p>
+      ) : (
+        <TeamList
+          items={loadedItems}
+          onEdit={(member) => setEditingMember(member)}
+          onDelete={handleDelete}
+        />
+      )}
     </div>
-  )
+  );
 }
-
-export default TeamPage

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ChangeEvent, type FormEvent } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
 
@@ -21,97 +21,96 @@ export default function AddClientModal({
   const [loading, setLoading] = useState(false);
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      await addDoc(collection(db, "client"), {
+      const payload = {
         ...formData,
+        date: new Date(formData.date),
         createdAt: serverTimestamp(),
-      });
+      };
+
+      await addDoc(collection(db, "clients"), payload);
+
       onSuccess();
       onClose();
     } catch (err) {
       console.error("Error adding client:", err);
-      alert("Failed to add client");
+      alert("Error adding client. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 bg-[#3333334e] flex justify-center items-center z-50">
+    <div className="fixed inset-0 w-screen bg-[#3333334e] bg-opacity-10 flex flex-col justify-center items-center z-50">
       <form
         onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-xl w-[90%] max-w-2xl"
+        className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
       >
-        <h2 className="text-2xl text-seconderyStar font-bold mb-6">
-          Add New Client
-        </h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
-            <input
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Date</label>
-            <input
-              type="date"
-              name="date"
-              value={formData.date}
-              onChange={handleChange}
-              className="w-full border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
+        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Client</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            placeholder="Title"
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            required
+          />
+          
+          <input
+            placeholder="Date"
+            name="date"
+            type="date"
+            value={formData.date}
+            onChange={handleChange}
+            required
+          />
+          
+          <input
+            placeholder="Domain"
+            name="domain"
+            value={formData.domain}
+            onChange={handleChange}
+            required
+          />
+          
+          <input
+            placeholder="Category"
+            name="category"
+            value={formData.category}
+            onChange={handleChange}
+            required
+          />
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-1">Domain</label>
-            <input
-              name="domain"
-              value={formData.domain}
-              onChange={handleChange}
-              className="w-full border-2 border-gray-400 p-2 rounded"
-            />
-          </div>
-
-          <div className="mb-6">
-            <label className="block text-sm font-medium mb-1">Category</label>
-            <input
-              name="category"
-              value={formData.category}
-              onChange={handleChange}
-              className="w-full border-2 border-gray-400 p-2 rounded"
-            />
-          </div>
-        </div>
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-1">What Say?</label>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            What They Say
+          </label>
           <textarea
             name="what_say"
             value={formData.what_say}
             onChange={handleChange}
             className="w-full border-2 border-gray-400 p-2 rounded"
+            rows={4}
+            required
           />
         </div>
 
-        <div className="flex justify-end gap-3">
+        <div className="flex justify-end gap-2">
           <button
             type="button"
             onClick={onClose}
@@ -121,7 +120,7 @@ export default function AddClientModal({
           </button>
           <button
             type="submit"
-            className="bg-mainPurple text-white px-4 py-2 rounded hover:bg-hoverPurple"
+            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
             disabled={loading}
           >
             {loading ? "Adding..." : "Add Client"}

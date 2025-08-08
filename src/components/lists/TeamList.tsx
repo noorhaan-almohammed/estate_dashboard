@@ -1,36 +1,31 @@
-import type { Dispatch, SetStateAction } from "react";
 import { Link } from "react-router-dom";
-import type { TeamListData } from "../../pages/dashboard/TeamPage";
 
-const TeamList = ({
+export default function TeamList({
   items,
-  setShowEditModal,
+  onEdit,
+  onDelete,
 }: {
-  items: TeamListData[];
-  setShowEditModal: Dispatch<SetStateAction<boolean>>;
-}) => {
+  items: any[];
+  onEdit: (member: any) => void;
+  onDelete: (id: string) => void;
+}) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-6">
-      {items.map((team: TeamListData) => (
-        <div key={team.id} className="border rounded-xl p-4 shadow">
-            <div className="rounded-lg w-full h-50 overflow-hidden">
-              <img
-                src={team.profile}
-                alt="image"
-                className="h-full w-full object-cover"
-              />
-            </div>
-          
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {items.map((member) => (
+        <div key={member.id} className="border rounded-xl p-4 shadow flex flex-col items-center">
+          {member.profileImage && (
+            <img
+              src={member.profileImage}
+              alt={member.name}
+              className="w-32 h-32 rounded-full object-cover mb-4"
+            />
+          )}
+          <h3 className="text-lg font-semibold text-center">{member.name}</h3>
+          <p className="text-sm text-gray-600 text-center mb-4">{member.position}</p>
 
-          <div className="flex flex-col gap-4 mt-2">
-            <div>
-              <h3 className="text-lg font-semibold">{team.name}</h3>
-              <p className="text-sm text-gray-600">{team.position}</p>
-            </div>
-          </div>
-          <div className="mt-4 flex gap-2">
+          <div className="mt-auto flex gap-2">
             <Link
-              to={`/team-member/${team.id}`}
+              to={`/team-member/${member.id}`}  
               className="text-blue-600 cursor-pointer"
             >
               Show
@@ -38,15 +33,14 @@ const TeamList = ({
 
             <button
               className="text-green-600 cursor-pointer"
-              onClick={() => {
-                setShowEditModal(true);
-              }}
+              onClick={() => onEdit(member)}
             >
               Edit
             </button>
 
             <button
               className="text-red-600 cursor-pointer"
+              onClick={() => onDelete(member.id)}
             >
               Delete
             </button>
@@ -54,7 +48,5 @@ const TeamList = ({
         </div>
       ))}
     </div>
-  )
+  );
 }
-
-export default TeamList

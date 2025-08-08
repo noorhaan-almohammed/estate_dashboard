@@ -1,58 +1,76 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { useParams, Link } from "react-router-dom";
+import { doc, getDoc } from "firebase/firestore";
+import { db } from "../firebaseConfig";
+import InfoItem from "../components/InfoItem";
 
-const ClientData = {
-  id: 1,
-  title: "ABC Corporation",
-  date: "Since 2019",
-  domin: "Commercial Real Estate",
-  category: "Luxury Home Development",
-  what_say:
-    "Estatein's expertise in finding the perfect office space for our expanding operations was invaluable. They truly understand our business needs.",
-};
+export default function ClientPage() {
+  const { id } = useParams<{ id: string }>();
+  const [client, setClient] = useState<any | null>(null);
+  const [loading, setLoading] = useState(true);
 
-function ClientPage() {
+  useEffect(() => {
+    const fetchClient = async () => {
+      try {
+        const docRef = doc(db, "clients", id!);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          setClient({ id: docSnap.id, ...docSnap.data() });
+        }
+      } catch (err) {
+        console.error("Error fetching client:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchClient();
+  }, [id]);
+
+  if (loading) return <p className="text-center mt-8">Loading...</p>;
+  if (!client)
+    return <p className="text-center text-red-600 mt-8">Client not found.</p>;
+
   return (
-    <div className="max-w-[90%] mx-auto p-6 space-y-8 h-screen flex flex-col  w-full">
+    <div className="max-w-[90%] mx-auto p-6 space-y-8">
       <div>
         <Link
           to="/clients-dashboard"
-          className="font-semibold cursor-pointer px-4 py-2 rounded-full text-lg bg-mainPurple text-white hover:bg-hoverPurple "
+          className="font-semibold cursor-pointer px-4 py-2 rounded-full text-lg bg-mainPurple text-white hover:bg-hoverPurple"
         >
           Back to list
         </Link>
       </div>
 
-      <div className="h-screen   flex justify-center items-center">
-        <div
-          key={ClientData.id}
-          className="border rounded-xl p-6 shadow hover:shadow-md transition-shadow bg-bg max-w[450px] xl:max-w-[573px] "
-        >
-          <div className="flex items-center gap-4 mb-4">
-            <div>
-              <h3 className="text-[14px] lg:text-xl font-bold text-secPurple">
-                {ClientData.date}
-              </h3>
-              <p className="text-[16px] lg:text-2xl font-bold text-mainText">
-                {ClientData.title}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center gap-3.5 ">
-            <p className="text-[12px] lg:text-[18px] text-secText mb-4">
-              {ClientData.domin}
-            </p>
-            <p className="text-[12px] lg:text-[18px] text-secText mb-4">
-              {ClientData.category}
-            </p>
-          </div>
-          <p className="text-[14px] lg:text-2xl  text-mainText mb-4">
-            {ClientData.what_say}
-          </p>
+      <div>
+        <h1 className="text-3xl font-bold">{client.title}</h1>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+          <InfoItem label="Domain" value={client.domain} />
+          <InfoItem label="Category" value={client.category} />
+          <InfoItem
+            label="Date"
+            value={
+              client.date?.seconds
+                ? new Date(client.date.seconds * 1000).toLocaleDateString()
+                : client.date instanceof Date
+                ? client.date.toLocaleDateString()
+                : "-"
+            }
+          />
+          <InfoItem
+            label="Created At"
+            value={
+              client.createdAt?.seconds
+                ? new Date(client.createdAt.seconds * 1000).toLocaleString()
+                : "-"
+            }
+          />
         </div>
+      </div>
+
+      <div>
+        <h2 className="text-xl font-semibold mb-2">What They Say</h2>
+        <p className="text-gray-700 whitespace-pre-line">{client.what_say}</p>
       </div>
     </div>
   );
 }
-
-export default ClientPage;

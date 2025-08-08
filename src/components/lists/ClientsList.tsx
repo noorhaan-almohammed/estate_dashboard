@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 export default function ClientsList({
   items,
   onEdit,
@@ -11,41 +12,27 @@ export default function ClientsList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((client) => (
-        <div
-          key={client.id}
-          className="border rounded-xl p-6 shadow hover:shadow-md transition-shadow bg-bg"
-        >
-          <div className="flex items-center gap-4 mb-4">
-            <div>
-              <h3 className="text-xl font-bold text-secPurple">
-                {client.date}
-              </h3>
-              <p className="text-2xl font-bold text-mainText">{client.title}</p>
-            </div>
-          </div>
-
-          <div className="flex justify-between items-center text-[12px]">
-            <p className="text-secText mb-4">{client.domin}</p>
-            <p className="text-secText mb-4">{client.category}</p>
-          </div>
-          <p className="text-mainText mb-4">{client.what_say}</p>
-
-          <div className="flex gap-3">
-            <Link
-              to={`/client/${client.id}`}
-              className="text-blue-600 hover:text-blue-800"
-            >
-              View
+        <div key={client.id} className="border rounded-xl p-4 shadow">
+          <h3 className="text-lg font-semibold">{client.title}</h3>
+          <p className="text-sm text-gray-600">{client.domain}</p>
+          <p className="text-sm text-gray-600">{client.category}</p>
+          <p className="text-sm text-gray-600">
+            {new Date(client.date).toLocaleDateString()}
+          </p>
+          <p className="text-sm mt-2 line-clamp-2">{client.what_say}</p>
+          
+          <div className="mt-4 flex gap-2">
+            <Link to={`/client/${client.id}`} className="text-blue-600 cursor-pointer">
+              Show
             </Link>
-            <button
-              onClick={() => onEdit(client)}
-              className="text-green-600 hover:text-green-800"
-            >
+
+            <button className="text-green-600 cursor-pointer" onClick={() => onEdit(client)}>
               Edit
             </button>
+
             <button
+              className="text-red-600 cursor-pointer"
               onClick={() => onDelete(client.id)}
-              className="text-red-600 hover:text-red-800"
             >
               Delete
             </button>
