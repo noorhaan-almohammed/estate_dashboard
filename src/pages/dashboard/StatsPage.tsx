@@ -42,9 +42,9 @@ export default function StatsPage() {
   };
 
   return (
-    <div className="p-6">
+    <div className="p-7 min-h-screen bg-bg">
       <div className="flex justify-between items-center mb-8">
-        <h2 className="text-2xl font-bold">Statistics Dashboard</h2>
+        <h2 className="text-4xl font-bold animated-gradient-text">Statistics Dashboard</h2>
         <button
           onClick={() => setShowModal(true)}
           className="bg-mainPurple text-white px-4 py-2 rounded-lg hover:bg-hoverPurple"

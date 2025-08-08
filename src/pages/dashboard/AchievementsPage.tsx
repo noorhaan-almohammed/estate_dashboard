@@ -55,9 +55,9 @@ export default function AchievementsPage() {
   };
 
   return (
-    <div className="p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold">All Achievements</h2>
+    <div className=" p-7 min-h-screen bg-bg">
+      <div className="flex flex-col lg:flex-row gap-4 justify-between items-center mb-6">
+        <h2 className="text-4xl font-bold animated-gradient-text">All Achievements</h2>
         <button
           onClick={() => setShowModal(true)}
           className="bg-mainPurple text-white px-4 py-2 rounded-lg hover:bg-hoverPurple"
@@ -84,7 +84,7 @@ export default function AchievementsPage() {
       )}
 
       {isLoading ? (
-        <p>Loading...</p>
+        <p className="text-mainPurple text-2xl">Loading...</p>
       ) : (
         <AchievementsList
           items={loadedItems}

@@ -31,12 +31,12 @@ export default function AchievementPage() {
     fetchAchievement();
   }, [id]);
 
-  if (loading) return <p className="text-center mt-8">Loading...</p>;
+  if (loading) return <p className="mt-8 text-mainPurple">Loading...</p>;
   if (!achievement)
     return <p className="text-center text-red-600 mt-8">Achievement not found.</p>;
 
   return (
-    <div className="max-w-[90%] mx-auto p-6 space-y-8">
+    <div className="max-w-[90%] mx-auto p-6 space-y-8 ">
       <div>
         <Link
           to="/achievements-dashboard"

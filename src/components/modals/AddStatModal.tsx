@@ -42,12 +42,12 @@ export default function AddStatModal({ onClose, onSuccess }: AddStatModalProps) 
 
   return (
     <div className="fixed inset-0 bg-[#3333334e] flex justify-center items-center z-50">
-      <form 
+      <form
         onSubmit={handleSubmit}
         className="bg-white p-8 rounded-xl w-[90%] max-w-2xl"
       >
         <h2 className="text-2xl text-seconderyStar font-bold mb-6">Add New Statistic</h2>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
           <div>
             <label className="block text-sm font-medium mb-1">Title</label>
@@ -71,16 +71,7 @@ export default function AddStatModal({ onClose, onSuccess }: AddStatModalProps) 
           </div>
         </div>
 
-        {/* <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Icon (FontAwesome class)</label>
-          <input
-            name="icon"
-            value={formData.icon}
-            onChange={handleChange}
-            placeholder="fas fa-chart-line"
-            className="w-full border-2 border-gray-400 p-2 rounded"
-          />
-        </div> */}
+
 
         <div className="mb-6">
           <label className="block text-sm font-medium mb-1">Description</label>

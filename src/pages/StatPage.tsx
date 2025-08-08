@@ -46,11 +46,7 @@ export default function StatPage() {
 
       <div className="bg-white rounded-xl shadow-md p-8">
         <div className="flex items-center gap-6 mb-8">
-          {/*{stat.icon && (
-            <div className="bg-mainPurple text-white p-4 rounded-full">
-               <FontAwesomeIcon icon={stat.icon} className="text-3xl" /> 
-            </div>
-          )}*/}
+   
           <div>
             <h1 className="text-3xl font-bold">{stat.title}</h1>
             <p className="text-4xl font-bold text-mainPurple mt-2">{stat.value}</p>
