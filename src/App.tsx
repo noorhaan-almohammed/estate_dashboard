@@ -12,10 +12,10 @@ import OfficeLocationsPage from "./pages/dashboard/OfficeLocationsPage";
 import OfficeLocationPage from "./pages/OfficeLocationPage";
 import ClientsPage from "./pages/dashboard/ClientsPage";
 import ClientPage from "./pages/ClientPage";
-import FAQListPage from "./components/lists/FAQListPage";
 import ReviewsPage from "./pages/dashboard/ReviewsPage";
 import ReviewPage from "./pages/ReviewPage";
 import HomePage from "./pages/dashboard/HomePage";
+import FAQsPage from "./pages/dashboard/FAQsPage";
 
 function App() {
   return (
@@ -47,7 +47,7 @@ function App() {
           <Route path="clients-dashboard" element={<ClientsPage />} />
           <Route path={`client/:id`} element={<ClientPage />} />
           {/* FAQ */}
-          <Route path="faq-dashboard" element={<FAQListPage />} />
+          <Route path="faq-dashboard" element={<FAQsPage />} />
           {/* Reviews */}
           <Route path="reviews-dashboard" element={<ReviewsPage />} />
           <Route path={`review/:id`} element={<ReviewPage />} />

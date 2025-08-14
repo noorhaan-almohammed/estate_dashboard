@@ -1,10 +1,11 @@
+import SharedDetailsPage from "../reusecomponents/SharedDetailsPage";
 
-function OfficeLocationPage() {
+export default function OfficeLocationPage() {
   return (
-    <div>
-      
-    </div>
-  )
+    <SharedDetailsPage
+      collectionName="officeLocations"
+      backLink="/office-locations-dashboard"
+      backLinkText="Back to list"
+    />
+  );
 }
-
-export default OfficeLocationPage

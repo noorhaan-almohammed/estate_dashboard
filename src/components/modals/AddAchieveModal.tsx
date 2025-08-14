@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import Form, { FeaturesInput, FormSection, ImageUpload, InputField } from "../../reusecomponents/FormAdd";
 
 interface AddAchievementModalProps {
   onClose: () => void;
@@ -29,10 +30,6 @@ export default function AddAchievementModal({ onClose, onSuccess }: AddAchieveme
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    handleInputChange(name, value);
-  };
-
-  const handleInputChange = (name: string, value: string | number) => {
     setFormData((prev) => ({
       ...prev,
       [name]: value,
@@ -79,6 +76,12 @@ export default function AddAchievementModal({ onClose, onSuccess }: AddAchieveme
     }
   };
 
+  const handleRemoveImage = (index: number) => {
+    const updated = [...imageUrls];
+    updated.splice(index, 1);
+    setImageUrls(updated);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -110,116 +113,67 @@ export default function AddAchievementModal({ onClose, onSuccess }: AddAchieveme
   };
 
   return (
-    <div className="fixed inset-0 w-screen bg-[#3333334e] bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
-      >
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Achievement</h2>
-        
-        <div className="flex justify-between gap-8">
-          <div className="flex flex-col w-1/2 gap-2">
-            <h3 className="text-xl text-seconderyStar font-bold">Basic info</h3>
-            <div className="flex items-center justify-between gap-2">
-              <input
-                placeholder="Title"
-                name="title"
-                onChange={handleChange}
-                className="border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded w-full"
-                required
-              />
-              <input
-                placeholder="Year"
-                name="year"
-                type="number"
-                onChange={handleChange}
-                className="border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded w-full"
-                required
-              />
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-xl text-seconderyStar font-bold">Description & Features</h3>
-        <div className="flex justify-between gap-2">
-          <div className="flex flex-col w-1/2 gap-2">
-            <textarea
-              name="description"
-              placeholder="Achievement description"
+    <Form
+      title="Add New Achievement"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading}
+    >
+      <FormSection title="Basic Information">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label className="block text-sm font-medium text-secText mb-2">Title</label>
+            <InputField
+              name="title"
+              placeholder="Achievement title"
               onChange={handleChange}
-              className="border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
               required
             />
           </div>
-          <div className="flex w-1/2 gap-2">
-            <div className="flex flex-col w-full gap-2">
-              {features.map((feature, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  placeholder={`Feature ${index + 1}`}
-                  value={feature}
-                  onChange={(e) => handleFeatureChange(index, e.target.value)}
-                  className="w-full border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={addFeatureField}
-              className="bg-mainPurple text-xl font-bold aspect-square w-11 h-11 flex items-center justify-center text-white p-1 rounded cursor-pointer hover:bg-hoverPurple"
-            >
-              +
-            </button>
-          </div>
-        </div>
-
-        <h3 className="text-xl text-seconderyStar font-bold">Upload Images</h3>
-        <div className="flex items-center gap-2">
-          <div className="relative w-fit flex items-center justify-center">
-            <input
-              className="border-2 text-transparent p-1 rounded bg-mainPurple hover:bg-hoverPurple aspect-square w-11 h-11 cursor-pointer"
-              type="file"
-              accept=".png, .jpg, .jpeg, .webp"
-              multiple
-              onChange={handleImageUpload}
+          <div>
+            <label className="block text-sm font-medium text-secText mb-2">Year</label>
+            <InputField
+              name="year"
+              type="number"
+              placeholder="2023"
+              onChange={handleChange}
               required
             />
-            <label className="absolute text-xl font-bold flex items-center justify-center text-white">
-              +
-            </label>
-          </div>
-          {uploading && <p className="text-seconderyStar">Uploading images...</p>}
-
-          <div className="flex gap-2 flex-wrap mt-2">
-            {imageUrls.map((url, i) => (
-              <img
-                key={i}
-                src={url}
-                alt="Preview"
-                className="w-24 h-24 object-cover rounded"
-              />
-            ))}
           </div>
         </div>
+      </FormSection>
 
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-            disabled={loading}
-          >
-            {loading ? "Adding..." : "Add Achievement"}
-          </button>
-        </div>
-      </form>
-    </div>
+      <FormSection title="Description">
+        <InputField
+          name="description"
+          placeholder="Describe the achievement..."
+          onChange={handleChange}
+          rows={4}
+          required
+        />
+      </FormSection>
+
+      <FormSection title="Features">
+        <FeaturesInput
+          features={features}
+          onFeatureChange={handleFeatureChange}
+          onAddFeature={addFeatureField}
+          onRemoveFeature={(index) => {
+            const updated = [...features];
+            updated.splice(index, 1);
+            setFeatures(updated);
+          }}
+        />
+      </FormSection>
+
+      <FormSection title="Images">
+        <ImageUpload
+          onImageUpload={handleImageUpload}
+          imageUrls={imageUrls}
+          uploading={uploading}
+          onRemoveImage={handleRemoveImage}
+        />
+      </FormSection>
+    </Form>
   );
 }

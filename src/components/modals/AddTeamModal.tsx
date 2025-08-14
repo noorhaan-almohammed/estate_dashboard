@@ -1,112 +1,124 @@
-import InputField from '../InputField';
-
-
-interface TeamAddForm {
-  type: "text" | "number" | "email";
-  name: string;
-  holder: string;
-  min?: number;
-  max?: number;
-}
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import Form, { FormSection, InputField, ImageUpload } from "../../reusecomponents/FormAdd";
 
 interface AddTeamModalProps {
   onClose: () => void;
+  onSuccess: () => void;
 }
 
-const teamAddForm: TeamAddForm[] = [
-  {
-    type: "text",
-    name: "team_name",
-    holder: "Full Name",
-  },
-  {
-    type: "text",
-    name: "team_position",
-    holder: "Add Position",
-  },
-];
+const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dxwb3czjn/image/upload";
+const CLOUDINARY_UPLOAD_PRESET = "unsigned_upload";
 
-const AddTeamModal = ({
+export default function AddTeamModal({
   onClose,
-}: AddTeamModalProps) => {
+  onSuccess,
+}: AddTeamModalProps) {
+  const [formData, setFormData] = useState({
+    name: "",
+    position: "",
+  });
+  const [profileImage, setProfileImage] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
-  const handleInputChange = () => {
-    console.log("hahahaha");
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("folder", "team");
+
+      const res = await fetch(CLOUDINARY_UPLOAD_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.secure_url) {
+        setProfileImage(data.secure_url);
+      } else {
+        throw new Error(data.error?.message || "Upload failed");
+      }
+    } catch (err) {
+      console.error("Image upload error:", err);
+      alert("Image upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const payload = {
+        ...formData,
+        profileImage,
+        createdAt: serverTimestamp(),
+      };
+
+      await addDoc(collection(db, "team"), payload);
+
+      onSuccess();
+      onClose();
+    } catch (err) {
+      console.error("Error adding team member:", err);
+      alert("Error adding team member. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="fixed inset-0 w-screen bg-[#333333]/80 bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] lg:w-[75%] shadow-lg">
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">
-          Add Member
-        </h2>
-        <h3 className="text-xl text-seconderyStar font-bold">Member info</h3>
-
-        <div className="w-full grid grid-cols-2 gap-4">
-          {teamAddForm.map((item) => (
-            <InputField
-              key={item.name}
-              name={item.name}
-              type={item.type}
-              placeholder={item.holder}
-              onChange={handleInputChange}
-            />
-          ))}
+    <Form
+      title="Add Team Member"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading || uploading}
+    >
+      <FormSection title="Member Information">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Name"
+            required
+          />
+          <InputField
+            name="position"
+            value={formData.position}
+            onChange={handleChange}
+            placeholder="Position"
+            required
+          />
         </div>
+      </FormSection>
 
-        <div className="flex items-center gap-2">
-          <div className="relative w-fit flex items-center justify-center">
-            <input
-              className="border-2 text-transparent p-1 rounded bg-mainPurple hover:bg-hoverPurple aspect-square w-11 h-11 cursor-pointer"
-              type="file"
-              accept=".png, .jpg, .jpeg, .webp"
-              multiple
-              //   onChange={handleImageUpload}
-            />
-            <label className="absolute text-xl font-bold flex items-center justify-center text-white">
-              +
-            </label>
-          </div>
-          {/* {uploading && <p className="text-seconderyStar">Uploading images...</p>} */}
-
-          {/* <div className="flex gap-2 flex-wrap mt-2">
-            {imageUrls.map((url, i) => (
-              <div key={idx} className="relative w-24 h-24">
-                <img
-                  src={url}
-                  alt={`image-${idx}`}
-                  className="w-full h-full object-cover rounded"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(url)}
-                  className="absolute top-[-6px] right-[-6px] bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"
-                  title="Remove image"
-                >
-                  ✕
-                </button>
-              </div>
-             ))}
-          </div> */}
-        </div>
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-          >
-            Add Member
-          </button>
-        </div>
-      </form>
-    </div>
-  )
+      <FormSection title="Profile Image">
+        <ImageUpload
+          onImageUpload={handleImageUpload}
+          imageUrls={profileImage ? [profileImage] : []}
+          uploading={uploading}
+          onRemoveImage={() => setProfileImage("")}
+          multiple={false}
+        />
+      </FormSection>
+    </Form>
+  );
 }
-
-export default AddTeamModal

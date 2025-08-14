@@ -1,15 +1,14 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
-import InputField from "../InputField";
+import Form, { FeaturesInput, FormSection, ImageUpload, InputField } from "../../reusecomponents/FormAdd";
 
 interface AddPropertyModalProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
-const CLOUDINARY_UPLOAD_URL =
-  "https://api.cloudinary.com/v1_1/dxwb3czjn/image/upload";
+const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dxwb3czjn/image/upload";
 const CLOUDINARY_UPLOAD_PRESET = "unsigned_upload";
 
 export default function AddPropertyModal({
@@ -32,24 +31,16 @@ export default function AddPropertyModal({
     setFeatures([...features, ""]);
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    handleInputChange(name, value);
-  };
-
-  const handleInputChange = (name: string, value: string | number) => {
     setFormData((prev) => ({
       ...prev,
-      [name]:
-        typeof value === "string" &&
-        !isNaN(Number(value)) &&
-        value.trim() !== ""
-          ? Number(value)
-          : value,
+      [name]: typeof value === "string" && !isNaN(Number(value)) && value.trim() !== ""
+        ? Number(value)
+        : value,
     }));
   };
+
   const uploadToCloudinary = async (file: File) => {
     const formData = new FormData();
     formData.append("file", file);
@@ -90,6 +81,12 @@ export default function AddPropertyModal({
     }
   };
 
+  const handleRemoveImage = (index: number) => {
+    const updated = [...imageUrls];
+    updated.splice(index, 1);
+    setImageUrls(updated);
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -121,147 +118,211 @@ export default function AddPropertyModal({
   };
 
   return (
-    <div className=" fixed inset-0 w-screen bg-[#3333334e] bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
-      >
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Property</h2>
-        <div className="flex justify-between gap-8">
-          <div className="flex flex-col w-1/2 gap-2">
-            <h3 className="text-xl text-seconderyStar font-bold">Basic info</h3>
-            <div className="flex items-center justify-between gap-2">
-              <InputField  placeholder="Type" name="type" onChange={handleInputChange}/>
-              <InputField placeholder="Name" name="name" onChange={handleInputChange} />
-              <InputField name="location" placeholder="Location"  onChange={handleInputChange} />
-              <InputField name="price" type="number" placeholder="Price" onChange={handleInputChange} />
-            </div>
-          </div>
-          <div className="flex flex-col w-1/2 gap-2">
-            <h3 className="text-xl text-seconderyStar font-bold">Static info</h3>
-            <div className="flex items-center justify-between gap-2">
-              <InputField name="bedrooms" type="number" placeholder="Bedrooms" onChange={handleInputChange}/>
-              <InputField name="bathrooms" type="number" placeholder="Bathrooms" onChange={handleInputChange}/>
-              <InputField name="area" type="number" placeholder="Area (m²)" onChange={handleInputChange}/>
-              <InputField name="build_year" type="number" min={1000} max={9999} placeholder="Build year" onChange={handleInputChange} />
-            </div>
-          </div>
-        </div>
-
-        <h3 className="text-xl text-seconderyStar font-bold">
-          Description & Features
-        </h3>
-        <div className="flex justify-between gap-2">
-          <div className="flex flex-col w-1/2 gap-2">
-            <InputField placeholder="Tag Description" name="tag_description" onChange={handleInputChange} />           
-            <textarea
-            name="description"
-            placeholder="Property description"
-            onChange={handleChange}
-            className=" border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
-            required
-          />
-          <textarea
-            name="feature_description"
-            placeholder="Feature Property description"
-            onChange={handleChange}
-            className=" border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
-            required
-          />
-          </div>
-          <div className="flex w-1/2 gap-2">
-            <div className="flex flex-col w-full gap-2">
-              {features.map((feature, index) => (
-                <input
-                  key={index}
-                  type="text"
-                  placeholder={`Feature ${index + 1}`}
-                  value={feature}
-                  onChange={(e) => handleFeatureChange(index, e.target.value)}
-                  className="w-full border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
-                  required
-                />
-              ))}
-            </div>
-            <button
-              type="button"
-              onClick={addFeatureField}
-              className="bg-mainPurple text-xl font-bold aspect-square w-11 h-11 flex items-center justify-center text-white p-1 rounded cursor-pointer hover:bg-hoverPurple"
-            >
-              +
-            </button>
-          </div>
-        </div>
-        <div className="flex justify-between gap-8">
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl text-seconderyStar font-bold">Additional Fees</h3>
-            <div className="flex items-center flex-wrap gap-1.5">
-              <InputField name="transfer_tax" type="number" placeholder="Transfer Tax" onChange={handleInputChange} className=""/>
-              <InputField name="legal_fees" type="number" placeholder="Legal Fees" onChange={handleInputChange} className=""/>
-              <InputField name="inspection" type="number" placeholder="Home Inspection" onChange={handleInputChange} className=""/>
-              <InputField name="insurance"type="number" placeholder="Property Insurance"onChange={handleInputChange}className=""/>
-              <InputField name="mortgage_fees"placeholder="Mortgage Fees"onChange={handleInputChange}className="" />
-              <InputField name="monthly_taxes" type="number" placeholder=" Property Taxes" onChange={handleInputChange} className=""  />
-              <InputField name="hoa_fee" type="number" placeholder="Homeowners' Association Fee" onChange={handleInputChange} className=""  />
-            </div>
-          </div>
-          <div className="flex flex-col gap-2">
-            <h3 className="text-xl text-seconderyStar font-bold">Total Initial Costs</h3>
-            <div className="flex items-center flex-wrap gap-1.5">
-              <InputField name="listing_price" type="number" placeholder="Listing Price" onChange={handleInputChange} className=""/>
-              <InputField name="total_additional_fees" type="number" placeholder="Add Fees Total" onChange={handleInputChange} className=" "/>
-              <InputField name="down_payment" type="number" placeholder="Down Payment" onChange={handleInputChange} className=""/>
-              <InputField name="mortgage_amount" type="number" placeholder="Mortgage Amount" onChange={handleInputChange} className=""/>
-              <InputField name="expense_taxes" type="number" placeholder="Expense Taxes" onChange={handleInputChange} className=""/>
-              <InputField name="expense_insurance" type="number" placeholder="Expense Insurance" onChange={handleInputChange} className="" required/>
-              <InputField name="expense_mortgage" type="text" placeholder="Expense Mortgage" onChange={handleInputChange} className="" required/>
-            </div>
-          </div>
-        </div>
-        <h3 className="text-xl text-seconderyStar font-bold">Upload Images</h3>
-        <div className="flex items-center gap-2">
-          <div className="relative w-fit flex items-center justify-center">
-            <input
-              className="border-2 text-transparent p-1 rounded bg-mainPurple hover:bg-hoverPurple aspect-square w-11 h-11 cursor-pointer"
-              type="file"
-              accept=".png, .jpg, .jpeg, .webp"
-              multiple
-              onChange={handleImageUpload}
+    <Form
+      title="Add Property"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading}
+    >
+      <div className="flex flex-col lg:flex-row justify-between gap-4 lg:gap-8">
+        <FormSection title="Basic info" className="w-full lg:w-1/2">
+          <div className="flex flex-col gap-4">
+            <InputField
+              placeholder="Type"
+              name="type"
+              onChange={handleChange}
             />
-            <label className="absolute text-xl font-bold flex items-center justify-center text-white">
-              +
-            </label>
+            <InputField
+              placeholder="Name"
+              name="name"
+              onChange={handleChange}
+            />
+            <InputField
+              name="location"
+              placeholder="Location"
+              onChange={handleChange}
+            />
+            <InputField
+              name="price"
+              type="number"
+              placeholder="Price"
+              onChange={handleChange}
+            />
           </div>
-          {uploading && <p className="text-seconderyStar">Uploading images...</p>}
+        </FormSection>
 
-          <div className="flex gap-2 flex-wrap mt-2">
-            {imageUrls.map((url, i) => (
-              <img
-                key={i}
-                src={url}
-                alt="Preview"
-                className="w-24 h-24 object-cover rounded"
-              />
-            ))}
+        <FormSection title="Static info" className="w-full lg:w-1/2">
+          <div className="flex flex-col gap-4">
+            <InputField
+              name="bedrooms"
+              type="number"
+              placeholder="Bedrooms"
+              onChange={handleChange}
+            />
+            <InputField
+              name="bathrooms"
+              type="number"
+              placeholder="Bathrooms"
+              onChange={handleChange}
+            />
+            <InputField
+              name="area"
+              type="number"
+              placeholder="Area (m²)"
+              onChange={handleChange}
+            />
+            <InputField
+              name="build_year"
+              type="number"
+              placeholder="Build year"
+              onChange={handleChange}
+            />
+          </div>
+        </FormSection>
+      </div>
+
+      <FormSection title="Description & Features">
+        <div className="flex flex-col lg:flex-row justify-between gap-4">
+          <div className="w-full lg:w-1/2 space-y-4">
+            <InputField
+              placeholder="Tag Description"
+              name="tag_description"
+              onChange={handleChange}
+            />
+            <InputField
+              name="description"
+              placeholder="Property description"
+              onChange={handleChange}
+              rows={4}
+              required
+            />
+            <InputField
+              name="feature_description"
+              placeholder="Feature Property description"
+              onChange={handleChange}
+              rows={4}
+              required
+            />
+          </div>
+          <div className="w-full lg:w-1/2">
+            <FeaturesInput
+              features={features}
+              onFeatureChange={handleFeatureChange}
+              onAddFeature={addFeatureField}
+              onRemoveFeature={(index) => {
+                const updated = [...features];
+                updated.splice(index, 1);
+                setFeatures(updated);
+              }}
+            />
           </div>
         </div>
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-            disabled={loading}
-          >
-            {loading ? "Adding..." : "Add Property"}
-          </button>
-        </div>
-      </form>
-    </div>
+      </FormSection>
+
+      <div className="flex flex-col lg:flex-row justify-between gap-4 lg:gap-8">
+        <FormSection title="Additional Fees" className="w-full lg:w-1/2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <InputField
+              name="transfer_tax"
+              type="number"
+              placeholder="Transfer Tax"
+              onChange={handleChange}
+            />
+            <InputField
+              name="legal_fees"
+              type="number"
+              placeholder="Legal Fees"
+              onChange={handleChange}
+            />
+            <InputField
+              name="inspection"
+              type="number"
+              placeholder="Home Inspection"
+              onChange={handleChange}
+            />
+            <InputField
+              name="insurance"
+              type="number"
+              placeholder="Property Insurance"
+              onChange={handleChange}
+            />
+            <InputField
+              name="mortgage_fees"
+              placeholder="Mortgage Fees"
+              onChange={handleChange}
+            />
+            <InputField
+              name="monthly_taxes"
+              type="number"
+              placeholder="Property Taxes"
+              onChange={handleChange}
+            />
+            <InputField
+              name="hoa_fee"
+              type="number"
+              placeholder="HOA Fee"
+              onChange={handleChange}
+            />
+          </div>
+        </FormSection>
+
+        <FormSection title="Total Initial Costs" className="w-full lg:w-1/2">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <InputField
+              name="listing_price"
+              type="number"
+              placeholder="Listing Price"
+              onChange={handleChange}
+            />
+            <InputField
+              name="total_additional_fees"
+              type="number"
+              placeholder="Fees Total"
+              onChange={handleChange}
+            />
+            <InputField
+              name="down_payment"
+              type="number"
+              placeholder="Down Payment"
+              onChange={handleChange}
+            />
+            <InputField
+              name="mortgage_amount"
+              type="number"
+              placeholder="Mortgage Amount"
+              onChange={handleChange}
+            />
+            <InputField
+              name="expense_taxes"
+              type="number"
+              placeholder="Expense Taxes"
+              onChange={handleChange}
+            />
+            <InputField
+              name="expense_insurance"
+              type="number"
+              placeholder="Expense Insurance"
+              onChange={handleChange}
+              required
+            />
+            <InputField
+              name="expense_mortgage"
+              placeholder="Expense Mortgage"
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </FormSection>
+      </div>
+
+      <FormSection title="Upload Images">
+        <ImageUpload
+          onImageUpload={handleImageUpload}
+          imageUrls={imageUrls}
+          uploading={uploading}
+          onRemoveImage={handleRemoveImage}
+        />
+      </FormSection>
+    </Form>
   );
 }

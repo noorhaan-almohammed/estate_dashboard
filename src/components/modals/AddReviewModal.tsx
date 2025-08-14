@@ -1,148 +1,171 @@
-import InputField from "../InputField";
+import { useState, type ChangeEvent, type FormEvent } from "react";
+import { addDoc, collection, serverTimestamp } from "firebase/firestore";
+import { db } from "../../firebaseConfig";
+import Form, { FormSection, ImageUpload, InputField } from "../../reusecomponents/FormAdd";
 
-interface ReviewAddForm {
-  type: "text" | "number" | "email";
-  name: string;
-  holder: string;
-  min?: number;
-  max?: number;
-}
-
-interface AddEditReviewModalProps {
+interface AddReviewModalProps {
   onClose: () => void;
+  onSuccess: () => void;
 }
 
-const reviewAddForm: ReviewAddForm[] = [
-  {
-    type: "text",
-    name: "review_name",
-    holder: "Full Name",
-  },
-  {
-    type: "text",
-    name: "review_country",
-    holder: "Add Country",
-  },
-  {
-    type: "text",
-    name: "review_city",
-    holder: "Add City",
-  },
-  {
-    type: "text",
-    name: "review_title",
-    holder: "Add Title",
-  },
-];
+const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dxwb3czjn/image/upload";
+const CLOUDINARY_UPLOAD_PRESET = "unsigned_upload";
 
-const AddReviewModal = ({
+export default function AddReviewModal({
   onClose,
-}: AddEditReviewModalProps) => {
-  const ratingStars: number[] = [1, 2, 3, 4, 5];
-  const handleInputChange = () => {
-    console.log("hahahaha");
+  onSuccess,
+}: AddReviewModalProps) {
+  const [formData, setFormData] = useState({
+    name: "",
+    country: "",
+    city: "",
+    title: "",
+    description: "",
+    rating: 5,
+  });
+  const [profileImage, setProfileImage] = useState("");
+  const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const handleChange = (
+    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: name === "rating" ? parseInt(value) : value,
+    }));
   };
+
+  const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+      formData.append("folder", "reviews");
+
+      const res = await fetch(CLOUDINARY_UPLOAD_URL, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (res.ok && data.secure_url) {
+        setProfileImage(data.secure_url);
+      } else {
+        throw new Error(data.error?.message || "Upload failed");
+      }
+    } catch (err) {
+      console.error("Image upload error:", err);
+      alert("Image upload failed. Please try again.");
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleSubmit = async (e: FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+
+    try {
+      const payload = {
+        ...formData,
+        profileimage: profileImage,
+        createdAt: serverTimestamp(),
+      };
+
+      await addDoc(collection(db, "reviews"), payload);
+
+      onSuccess();
+      onClose();
+    } catch (err) {
+      console.error("Error adding review:", err);
+      alert("Error adding review. Please try again.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
-    <div className="fixed inset-0 w-screen bg-[#333333]/80 bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] lg:w-[75%] shadow-lg">
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">
-          Add Review
-        </h2>
-        <h3 className="text-xl text-seconderyStar font-bold">Review info</h3>
-        <div className="flex items-center gap-5">
-          <label htmlFor="rating" className="text-lg font-semibold">
-            Rating:
-          </label>
-          <select
-            name="rating"
-            id="rating"
-            className="border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
-          >
-            {ratingStars.map((rate, index) => (
-              <option key={index} value={rate}>
-                {rate}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="w-full grid grid-cols-2 gap-4">
-          {reviewAddForm.map((item) => (
-            <InputField
-              key={item.name}
-              name={item.name}
-              type={item.type}
-              placeholder={item.holder}
-              onChange={handleInputChange}
-            />
-          ))}
-        </div>
-
-        <div className="w-full">
-          <textarea
-            className="w-full border-2 border-gray-400 text-seconderyStar placeholder:text-gray-400 placeholder:text-sm p-2 rounded"
-            name="review_description"
-            id="review_description"
-            placeholder="Add description"
-            minLength={50}
-            maxLength={300}
-            onChange={handleInputChange}
-          ></textarea>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <div className="relative w-fit flex items-center justify-center">
-            <input
-              className="border-2 text-transparent p-1 rounded bg-mainPurple hover:bg-hoverPurple aspect-square w-11 h-11 cursor-pointer"
-              type="file"
-              accept=".png, .jpg, .jpeg, .webp"
-              multiple
-              //   onChange={handleImageUpload}
-            />
-            <label className="absolute text-xl font-bold flex items-center justify-center text-white">
-              +
-            </label>
+    <Form
+      title="Add Review"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading}
+    >
+      <FormSection title="Review Information">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Name"
+            required
+          />
+          <InputField
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            placeholder="Country"
+            required
+          />
+          <InputField
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="City"
+            required
+          />
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium text-secText mb-2">Rating</label>
+            <select
+              name="rating"
+              value={formData.rating}
+              onChange={handleChange}
+              className="w-full bg-grayMedium border border-borderColor text-mainText rounded-lg px-4 py-3 focus:ring-2 focus:ring-mainPurple focus:border-transparent"
+              required
+            >
+              {[1, 2, 3, 4, 5].map((num) => (
+                <option key={num} value={num}>
+                  {num} Star{num !== 1 ? 's' : ''}
+                </option>
+              ))}
+            </select>
           </div>
-          {/* {uploading && <p className="text-seconderyStar">Uploading images...</p>} */}
+          <InputField
+            name="title"
+            value={formData.title}
+            onChange={handleChange}
+            placeholder="Title"
+            required
+          />
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium text-secText mb-2">Profile Image</label>
+            <ImageUpload
+              onImageUpload={handleImageUpload}
+              imageUrls={profileImage ? [profileImage] : []}
+              uploading={uploading}
+              onRemoveImage={() => setProfileImage("")}
+              multiple={false}
+            />
+          </div>
+        </div>
+      </FormSection>
 
-          {/* <div className="flex gap-2 flex-wrap mt-2">
-            {imageUrls.map((url, i) => (
-              <div key={idx} className="relative w-24 h-24">
-                <img
-                  src={url}
-                  alt={`image-${idx}`}
-                  className="w-full h-full object-cover rounded"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(url)}
-                  className="absolute top-[-6px] right-[-6px] bg-red-500 text-white rounded-full w-6 h-6 text-xs flex items-center justify-center"
-                  title="Remove image"
-                >
-                  ✕
-                </button>
-              </div>
-             ))}
-          </div> */}
-        </div>
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-          >
-            Add Review
-          </button>
-        </div>
-      </form>
-    </div>
+      <FormSection title="Review Content">
+        <InputField
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Description"
+          rows={4}
+          required
+        />
+      </FormSection>
+    </Form>
   );
-};
-
-export default AddReviewModal;
+}
