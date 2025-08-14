@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import Form, { FormSection, InputField, ImageUpload } from "../../reusecomponents/FormAdd";
 
 interface AddTeamModalProps {
   onClose: () => void;
@@ -22,7 +23,7 @@ export default function AddTeamModal({
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -84,73 +85,40 @@ export default function AddTeamModal({
   };
 
   return (
-    <div className="fixed inset-0 w-screen bg-[#3333334e] bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
-      >
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Team Member</h2>
-        
+    <Form
+      title="Add Team Member"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading || uploading}
+    >
+      <FormSection title="Member Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Name</label>
-            <input
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Position</label>
-            <input
-              name="position"
-              value={formData.position}
-              onChange={handleChange}
-              className="border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          
-          <div className="flex flex-col md:col-span-2">
-            <label className="mb-1 text-sm font-medium">Profile Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="border-2 border-gray-400 p-2 rounded"
-              required
-            />
-            {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
-            {profileImage && (
-              <img 
-                src={profileImage} 
-                alt="Profile Preview" 
-                className="w-32 h-32 rounded-full object-cover mt-2 mx-auto"
-              />
-            )}
-          </div>
+          <InputField
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Name"
+            required
+          />
+          <InputField
+            name="position"
+            value={formData.position}
+            onChange={handleChange}
+            placeholder="Position"
+            required
+          />
         </div>
+      </FormSection>
 
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-            disabled={loading || uploading}
-          >
-            {loading ? "Adding..." : "Add Member"}
-          </button>
-        </div>
-      </form>
-    </div>
+      <FormSection title="Profile Image">
+        <ImageUpload
+          onImageUpload={handleImageUpload}
+          imageUrls={profileImage ? [profileImage] : []}
+          uploading={uploading}
+          onRemoveImage={() => setProfileImage("")}
+          multiple={false}
+        />
+      </FormSection>
+    </Form>
   );
 }

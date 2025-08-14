@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import Form, { FormSection, InputField } from "../../reusecomponents/FormAdd";
 
 interface AddStatModalProps {
   onClose: () => void;
@@ -41,66 +42,46 @@ export default function AddStatModal({ onClose, onSuccess }: AddStatModalProps) 
   };
 
   return (
-    <div className="fixed inset-0 bg-[#3333334e] flex justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white p-8 rounded-xl w-[90%] max-w-2xl"
-      >
-        <h2 className="text-2xl text-seconderyStar font-bold mb-6">Add New Statistic</h2>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-          <div>
-            <label className="block text-sm font-medium mb-1">Title</label>
-            <input
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="w-full border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">Value</label>
-            <input
-              name="value"
-              value={formData.value}
-              onChange={handleChange}
-              className="w-full border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-        </div>
-
-
-
-        <div className="mb-6">
-          <label className="block text-sm font-medium mb-1">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
+    <Form
+      title="Add New Statistic"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading}
+    >
+      <FormSection title="Statistic Details">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            name="title"
+            value={formData.title}
             onChange={handleChange}
-            rows={3}
-            className="w-full border-2 border-gray-400 p-2 rounded"
+            placeholder="Title"
+            required
+          />
+          <InputField
+            name="value"
+            value={formData.value}
+            onChange={handleChange}
+            placeholder="Value"
+            required
           />
         </div>
+      </FormSection>
 
-        <div className="flex justify-end gap-3">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple text-white px-4 py-2 rounded hover:bg-hoverPurple"
-            disabled={loading}
-          >
-            {loading ? "Adding..." : "Add Statistic"}
-          </button>
-        </div>
-      </form>
-    </div>
+      <FormSection title="Additional Information">
+        <InputField
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Description"
+          rows={3}
+        />
+        <InputField
+          name="icon"
+          value={formData.icon}
+          onChange={handleChange}
+          placeholder="Icon (optional)"
+        />
+      </FormSection>
+    </Form>
   );
 }

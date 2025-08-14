@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import Form, { FormSection, ImageUpload, InputField } from "../../reusecomponents/FormAdd";
 
 interface AddReviewModalProps {
   onClose: () => void;
@@ -90,54 +91,42 @@ export default function AddReviewModal({
   };
 
   return (
-    <div className="fixed inset-0 w-screen bg-[#3333334e] bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
-      >
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Review</h2>
-        
+    <Form
+      title="Add Review"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading}
+    >
+      <FormSection title="Review Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <InputField
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            placeholder="Name"
+            required
+          />
+          <InputField
+            name="country"
+            value={formData.country}
+            onChange={handleChange}
+            placeholder="Country"
+            required
+          />
+          <InputField
+            name="city"
+            value={formData.city}
+            onChange={handleChange}
+            placeholder="City"
+            required
+          />
           <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Name</label>
-            <input
-              name="name"
-              value={formData.name}
-              onChange={handleChange}
-              className="border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Country</label>
-            <input
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">City</label>
-            <input
-              name="city"
-              value={formData.city}
-              onChange={handleChange}
-              className="border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Rating</label>
+            <label className="block text-sm font-medium text-secText mb-2">Rating</label>
             <select
               name="rating"
               value={formData.rating}
               onChange={handleChange}
-              className="border-2 border-gray-400 p-2 rounded"
+              className="w-full bg-grayMedium border border-borderColor text-mainText rounded-lg px-4 py-3 focus:ring-2 focus:ring-mainPurple focus:border-transparent"
               required
             >
               {[1, 2, 3, 4, 5].map((num) => (
@@ -147,59 +136,36 @@ export default function AddReviewModal({
               ))}
             </select>
           </div>
-          
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Title</label>
-            <input
-              name="title"
-              value={formData.title}
-              onChange={handleChange}
-              className="border-2 border-gray-400 p-2 rounded"
-              required
-            />
-          </div>
-          
-          <div className="flex flex-col">
-            <label className="mb-1 text-sm font-medium">Profile Image</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageUpload}
-              className="border-2 border-gray-400 p-2 rounded"
-            />
-            {uploading && <p className="text-sm text-gray-500">Uploading...</p>}
-          </div>
-        </div>
-
-        <div className="flex flex-col">
-          <label className="mb-1 text-sm font-medium">Description</label>
-          <textarea
-            name="description"
-            value={formData.description}
+          <InputField
+            name="title"
+            value={formData.title}
             onChange={handleChange}
-            className="border-2 border-gray-400 p-2 rounded"
-            rows={4}
+            placeholder="Title"
             required
           />
+          <div className="flex flex-col">
+            <label className="block text-sm font-medium text-secText mb-2">Profile Image</label>
+            <ImageUpload
+              onImageUpload={handleImageUpload}
+              imageUrls={profileImage ? [profileImage] : []}
+              uploading={uploading}
+              onRemoveImage={() => setProfileImage("")}
+              multiple={false}
+            />
+          </div>
         </div>
+      </FormSection>
 
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-            disabled={loading || uploading}
-          >
-            {loading ? "Adding..." : "Add Review"}
-          </button>
-        </div>
-      </form>
-    </div>
+      <FormSection title="Review Content">
+        <InputField
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          placeholder="Description"
+          rows={4}
+          required
+        />
+      </FormSection>
+    </Form>
   );
 }

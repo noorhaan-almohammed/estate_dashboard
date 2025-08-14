@@ -29,13 +29,13 @@ export default function ImageSlider({ images }: ImageSliderProps) {
         <>
           <button
             onClick={prevImage}
-            className="absolute cursor-pointer border border-borderColor aspect-square w-10 h-10 top-1/2 left-2 transform -translate-y-1/2 bg-mainText flex items-center justify-center p-2 rounded-full shadow"
+            className="absolute cursor-pointer border border-mainPurple text-mainPurple bg-bg aspect-square w-10 h-10 top-1/2 left-2 transform -translate-y-1/2 flex items-center justify-center p-2 rounded-full shadow hover:shadow-md hover:shadow-mainPurple"
           >
           <img src="/assets/images/leftArrow.svg" alt="left"/>{}  
           </button>
           <button
             onClick={nextImage}
-            className="absolute cursor-pointer border border-borderColor aspect-square w-10 h-10 top-1/2 right-2 transform -translate-y-1/2 bg-mainText flex items-center justify-center p-2 rounded-full shadow "
+            className="absolute cursor-pointer border border-mainPurple text-mainPurple bg-bg aspect-square w-10 h-10 top-1/2 right-2 transform -translate-y-1/2  flex items-center justify-center p-2 rounded-full shadow hover:shadow-md hover:shadow-mainPurple "
           >
             <img src="/assets/images/rightArrow.svg" alt="right" />{} 
           </button>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Card from "../../reusecomponents/Cards";
 
 export default function PropertiesList({
   items,
@@ -12,31 +12,39 @@ export default function PropertiesList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((property) => (
-        <div key={property.id} className="border rounded-xl p-4 shadow">
-          <img
-            src={property.imageUrls?.[0]}
-            alt={property.type}
-            className="h-40 w-full object-cover rounded"
-          />
-          <h3 className="text-lg font-semibold mt-2">{property.type}</h3>
-          <p className="text-sm text-gray-600">{property.location}</p>
-          <div className="mt-4 flex gap-2">
-            <Link to={`/property/${property.id}`} className="text-blue-600 cursor-pointer">
-              Show
-            </Link>
-
-            <button className="text-green-600 cursor-pointer" onClick={() => onEdit(property)}>
-              Edit
-            </button>
-
-            <button
-              className="text-red-600 cursor-pointer"
-              onClick={() => onDelete(property.id)}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
+        <Card
+          key={property.id}
+          id={property.id}
+          title={property.name}
+          description={property.description}
+          imageUrls={property.imageUrls}
+          imagePosition="background"
+          imageSize="full"
+          metadata={{
+            label: property.type,
+            value: `$${property.price.toLocaleString()}`,
+            date: property.createdAt?.toDate 
+              ? property.createdAt.toDate().toISOString()
+              : property.createdAt instanceof Date
+                ? property.createdAt.toISOString()
+                : "",
+            features: [
+              `${property.bedrooms} Bed`,
+              `${property.bathrooms} Bath`,
+              `${property.area} m²`,
+              property.location
+            ],
+            contact: {
+              phone: "", 
+            },
+          }}
+          viewLink={`/property/${property.id}`}
+          onEdit={() => onEdit(property)}
+          onDelete={() => onDelete(property.id)}
+          cardStyle="elevated"
+          hoverEffect={true}
+          className="h-full"
+        />
       ))}
     </div>
   );

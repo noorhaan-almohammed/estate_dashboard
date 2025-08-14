@@ -1,16 +1,14 @@
 import { useState, type ChangeEvent, type FormEvent } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
+import Form, {  FormSection, InputField } from "../../reusecomponents/FormAdd";
 
 interface AddClientModalProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
-export default function AddClientModal({
-  onClose,
-  onSuccess,
-}: AddClientModalProps) {
+export default function AddClientModal({ onClose, onSuccess }: AddClientModalProps) {
   const [formData, setFormData] = useState({
     title: "",
     date: "",
@@ -20,9 +18,7 @@ export default function AddClientModal({
   });
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
@@ -54,79 +50,56 @@ export default function AddClientModal({
   };
 
   return (
-    <div className="fixed inset-0 w-screen bg-[#3333334e] bg-opacity-10 flex flex-col justify-center items-center z-50">
-      <form
-        onSubmit={handleSubmit}
-        className="bg-white overflow-y-auto space-y-4 p-8 rounded-xl w-[90%] shadow-lg"
-      >
-        <h2 className="text-2xl text-seconderyStar font-bold mb-4">Add Client</h2>
-        
+    <Form
+      title="Add Client"
+      onSubmit={handleSubmit}
+      onClose={onClose}
+      loading={loading}
+    >
+      <FormSection title="Client Information">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            placeholder="Title"
+          <InputField
             name="title"
+            placeholder="Title"
             value={formData.title}
             onChange={handleChange}
             required
           />
-          
-          <input
-            placeholder="Date"
+          <InputField
             name="date"
             type="date"
+            placeholder="Date"
             value={formData.date}
             onChange={handleChange}
             required
           />
-          
-          <input
-            placeholder="Domain"
+          <InputField
             name="domain"
+            placeholder="Domain"
             value={formData.domain}
             onChange={handleChange}
             required
           />
-          
-          <input
-            placeholder="Category"
+          <InputField
             name="category"
+            placeholder="Category"
             value={formData.category}
             onChange={handleChange}
             required
           />
         </div>
+      </FormSection>
 
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            What They Say
-          </label>
-          <textarea
-            name="what_say"
-            value={formData.what_say}
-            onChange={handleChange}
-            className="w-full border-2 border-gray-400 p-2 rounded"
-            rows={4}
-            required
-          />
-        </div>
-
-        <div className="flex justify-end gap-2">
-          <button
-            type="button"
-            onClick={onClose}
-            className="bg-gray-300 px-4 py-2 rounded"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="bg-mainPurple hover:bg-hoverPurple cursor-pointer text-white px-4 py-2 rounded"
-            disabled={loading}
-          >
-            {loading ? "Adding..." : "Add Client"}
-          </button>
-        </div>
-      </form>
-    </div>
+      <FormSection title="Testimonial">
+        <InputField
+          name="what_say"
+          placeholder="What they say..."
+          value={formData.what_say}
+          onChange={handleChange}
+          rows={4}
+          required
+        />
+      </FormSection>
+    </Form>
   );
 }

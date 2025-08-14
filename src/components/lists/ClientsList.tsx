@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import Card from "../../reusecomponents/Cards";
 
 export default function ClientsList({
   items,
@@ -12,32 +12,28 @@ export default function ClientsList({
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {items.map((client) => (
-        <div key={client.id} className="border rounded-xl p-4 shadow">
-          <h3 className="text-lg font-semibold">{client.title}</h3>
-          <p className="text-sm text-gray-600">{client.domain}</p>
-          <p className="text-sm text-gray-600">{client.category}</p>
-          <p className="text-sm text-gray-600">
-            {new Date(client.date).toLocaleDateString()}
-          </p>
-          <p className="text-sm mt-2 line-clamp-2">{client.what_say}</p>
-          
-          <div className="mt-4 flex gap-2">
-            <Link to={`/client/${client.id}`} className="text-blue-600 cursor-pointer">
-              Show
-            </Link>
-
-            <button className="text-green-600 cursor-pointer" onClick={() => onEdit(client)}>
-              Edit
-            </button>
-
-            <button
-              className="text-red-600 cursor-pointer"
-              onClick={() => onDelete(client.id)}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
+        <Card
+          key={client.id}
+          id={client.id}
+          title={client.title}
+          description={client.what_say}
+          metadata={{
+            label: client.category,
+            value: client.domain,
+            date: client.date?.toDate 
+              ? client.date.toDate().toISOString() 
+              : client.date instanceof Date 
+                ? client.date.toISOString()
+                : "",
+            features: [client.category, client.domain],
+          }}
+          viewLink={`/client/${client.id}`}
+          onEdit={() => onEdit(client)}
+          onDelete={() => onDelete(client.id)}
+          cardStyle="elevated"
+          hoverEffect={true}
+          className="h-full"
+        />
       ))}
     </div>
   );
