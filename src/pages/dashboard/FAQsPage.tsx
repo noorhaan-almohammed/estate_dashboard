@@ -18,6 +18,7 @@ interface FAQ {
   createdAt?: Date;
 }
 
+
 export default function FAQsPage() {
   
   const [isLoading, setIsLoading] = useState(true);
