@@ -18,14 +18,17 @@ export default function ClientsList({
           title={client.title}
           description={client.what_say}
           metadata={{
-            label: client.category,
-            value: client.domain,
+            label: `Category: ${client.category}`,
+            categoryIcon: "fa fa-bolt-lightning",
+            value: `Domain: ${client.domain}`,
+            domainIcon: "fa fa-qrcode",
             date: client.date?.toDate 
               ? client.date.toDate().toISOString() 
               : client.date instanceof Date 
                 ? client.date.toISOString()
                 : "",
-            features: [client.category, client.domain],
+            dateIcon: "fas fa-calendar-alt",
+           
           }}
           viewLink={`/client/${client.id}`}
           onEdit={() => onEdit(client)}

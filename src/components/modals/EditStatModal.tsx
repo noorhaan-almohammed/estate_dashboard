@@ -6,7 +6,6 @@ interface Stat {
   title: string;
   value: string;
   description: string;
-  icon: string;
   createdAt: any;
   updatedAt?: any;
 }
@@ -25,8 +24,7 @@ export default function EditStatModal({
   const fields = [
     { name: "title", type: "text", placeholder: "Title", required: true },
     { name: "value", type: "text", placeholder: "Value", required: true },
-    { name: "description", type: "textarea", placeholder: "Description", rows: 3 },
-    { name: "icon", type: "text", placeholder: "Icon (FontAwesome class)" }
+    { name: "description", type: "textarea", placeholder: "Description", rows: 2 },
   ];
 
   return (

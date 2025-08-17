@@ -13,7 +13,6 @@ export default function AddStatModal({ onClose, onSuccess }: AddStatModalProps) 
     title: "",
     value: "",
     description: "",
-    icon: "",
   });
   const [loading, setLoading] = useState(false);
 
@@ -75,12 +74,7 @@ export default function AddStatModal({ onClose, onSuccess }: AddStatModalProps) 
           placeholder="Description"
           rows={3}
         />
-        <InputField
-          name="icon"
-          value={formData.icon}
-          onChange={handleChange}
-          placeholder="Icon (optional)"
-        />
+       
       </FormSection>
     </Form>
   );

@@ -1,7 +1,7 @@
 
 export default function LoadingSpinner() {
   return (
-     <div className="flex flex-col items-center justify-center py-12 max-w-full mx-auto p-6 space-y-8 bg-bg min-h-screen">
+     <div className="flex flex-col items-center justify-center py-12 max-w-full mx-auto p-6 space-y-8 bg-bg min-h-screen overflow-hidden  ">
       <div className="relative w-24 h-24">
         <div className="absolute w-full h-full border-4 border-mainPurple border-t-transparent rounded-full animate-spin"></div>
         

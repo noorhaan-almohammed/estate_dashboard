@@ -14,12 +14,9 @@ export default function AchievementsList({
       {items.map((achievement) => (
         <Card
           key={achievement.id}
-          id={achievement.id}
+          id={achievement.id} 
           title={achievement.title}
           description={achievement.description}
-          imageUrls={achievement.imageUrls}
-          imagePosition="background"
-          imageSize="full"
           metadata={{
             features: achievement.features,
             value: achievement.year,

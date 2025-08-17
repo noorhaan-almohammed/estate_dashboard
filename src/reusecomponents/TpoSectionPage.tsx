@@ -145,7 +145,8 @@ export default function ReusableDataPage({
       )}
 
       {isLoading ? (
-        <LoadingSpinner />
+        
+          <LoadingSpinner />
       ) : loadedItems.length === 0 ? (
         <div className="text-center py-12">
           <div className="inline-block mb-4">
