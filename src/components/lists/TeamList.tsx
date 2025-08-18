@@ -20,59 +20,39 @@ interface TeamListProps {
 
 export default function TeamList({ items, onEdit, onDelete }: TeamListProps) {
   return (
-    // <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-    //   {items.map((member) => (
-    //     <div key={member.id} className="border rounded-xl p-4 shadow flex flex-col items-center">
-    //       {member.profileImage && (
-    //         <img
-    //           src={member.profileImage}
-    //           alt={member.name}
-    //           className="w-32 h-32 rounded-full object-cover mb-4"
-    //         />
-    //       )}
-    //       <h3 className="text-lg font-semibold text-center">{member.name}</h3>
-    //       <p className="text-sm text-gray-600 text-center mb-4">{member.position}</p>
-
-    //       <div className="mt-auto flex gap-2">
-    //         <Link
-    //           to={`/team-member/${member.id}`}
-    //           className="text-blue-600 cursor-pointer"
-    //         >
-    //           Show
-    //         </Link>
-
-    //         <button
-    //           className="text-green-600 cursor-pointer"
-    //           onClick={() => onEdit(member)}
-    //         >
-    //           Edit
-    //         </button>
-
-    //         <button
-    //           className="text-red-600 cursor-pointer"
-    //           onClick={() => onDelete(member.id)}
-    //         >
-    //           Delete
-    //         </button>
-    //       </div>
-    //     </div>
-    //   ))}
-    // </div>
-
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 p-4 bg-bg">
       {items.map((member) => (
         <Card
           key={member.id}
           id={member.id}
           title={member.name}
+          subtitle={member.position}
           description={member.description}
-          imagePosition="background"
-          imageSize="full"
+          imageUrls={member.profileImage ? [member.profileImage] : []}
+          imagePosition="top"
+          imageSize="medium"
+          imageShape="circle"
           metadata={{
-      
+            position: member.position,
+            positionIcon: "fas fa-briefcase",
+            date: member.createdAt instanceof Date 
+              ? member.createdAt.toISOString() 
+              : member.createdAt?.seconds 
+                ? new Date(member.createdAt.seconds * 1000).toISOString()
+                : new Date().toISOString(),
+            features: [
+              {
+                text: "Team Member",
+                icon: "fas fa-users"
+              }
+            ],
+            contact: {
+              emailIcon: "fas fa-envelope",
+              phoneIcon: "fas fa-phone"
+            }
           }}
           viewLink={`/team-member/${member.id}`}
-           onEdit={() => onEdit(member)}
+          onEdit={() => onEdit(member)}
           onDelete={() => onDelete(member.id)}
           cardStyle="elevated"
           hoverEffect={true}

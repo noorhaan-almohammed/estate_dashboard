@@ -8,7 +8,6 @@ export interface Achievement {
     year: number;
     description: string;
     features: string[];
-    imageUrls: string[];
     createdAt: any;
     updatedAt?: any;
 }
@@ -19,7 +18,6 @@ interface EditAchievementModalProps {
     item: Achievement;
 }
 
-const CLOUDINARY_UPLOAD_PRESET = "unsigned_upload";
 
 export default function EditAchievementModal({
     onClose,
@@ -47,16 +45,6 @@ export default function EditAchievementModal({
             rows: 5
         }
     ];
-
-    const imageFields = [
-        {
-            name: "imageUrls",
-            uploadPreset: CLOUDINARY_UPLOAD_PRESET,
-            folder: "achievements",
-            multiple: true
-        }
-    ];
-
     const arrayFields = [
         {
             name: "features",
@@ -69,7 +57,6 @@ export default function EditAchievementModal({
             collectionName="achievements"
             item={achievement}
             fields={fields}
-            imageFields={imageFields}
             arrayFields={arrayFields}
             onClose={onClose}
             onSuccess={onSuccess}

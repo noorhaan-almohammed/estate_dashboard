@@ -1,20 +1,17 @@
 import { useState } from "react";
 import { addDoc, collection, serverTimestamp } from "firebase/firestore";
 import { db } from "../../firebaseConfig";
-import Form, { FeaturesInput, FormSection, ImageUpload, InputField } from "../../reusecomponents/FormAdd";
+import Form, { FeaturesInput, FormSection, InputField } from "../../reusecomponents/FormAdd";
 
 interface AddAchievementModalProps {
   onClose: () => void;
   onSuccess: () => void;
 }
 
-const CLOUDINARY_UPLOAD_URL = "https://api.cloudinary.com/v1_1/dxwb3czjn/image/upload";
-const CLOUDINARY_UPLOAD_PRESET = "unsigned_upload";
+
 
 export default function AddAchievementModal({ onClose, onSuccess }: AddAchievementModalProps) {
   const [formData, setFormData] = useState<Record<string, string | number>>({});
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [features, setFeatures] = useState<string[]>([""]);
 
@@ -36,66 +33,14 @@ export default function AddAchievementModal({ onClose, onSuccess }: AddAchieveme
     }));
   };
 
-  const uploadToCloudinary = async (file: File) => {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-    formData.append("folder", "achievements");
-
-    const res = await fetch(CLOUDINARY_UPLOAD_URL, {
-      method: "POST",
-      body: formData,
-    });
-
-    const data = await res.json();
-    if (res.ok && data.secure_url) {
-      return data.secure_url;
-    } else {
-      throw new Error(data.error?.message || "Upload failed");
-    }
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const files = e.target.files;
-    if (!files) return;
-
-    setUploading(true);
-    const urls: string[] = [];
-
-    try {
-      for (const file of Array.from(files)) {
-        const url = await uploadToCloudinary(file);
-        urls.push(url);
-      }
-      setImageUrls(urls);
-    } catch (err) {
-      console.error("Image upload error:", err);
-      alert("Image upload failed. Please try again.");
-    } finally {
-      setUploading(false);
-    }
-  };
-
-  const handleRemoveImage = (index: number) => {
-    const updated = [...imageUrls];
-    updated.splice(index, 1);
-    setImageUrls(updated);
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    if (imageUrls.length === 0) {
-      alert("Please upload at least one image.");
-      setLoading(false);
-      return;
-    }
-
     try {
       const payload = {
         ...formData,
-        imageUrls,
         features: features.filter((f) => f.trim() !== ""),
         createdAt: serverTimestamp(),
       };
@@ -135,7 +80,7 @@ export default function AddAchievementModal({ onClose, onSuccess }: AddAchieveme
             <InputField
               name="year"
               type="number"
-              placeholder="2023"
+              placeholder="2025"
               onChange={handleChange}
               required
             />
@@ -166,14 +111,6 @@ export default function AddAchievementModal({ onClose, onSuccess }: AddAchieveme
         />
       </FormSection>
 
-      <FormSection title="Images">
-        <ImageUpload
-          onImageUpload={handleImageUpload}
-          imageUrls={imageUrls}
-          uploading={uploading}
-          onRemoveImage={handleRemoveImage}
-        />
-      </FormSection>
     </Form>
   );
 }
