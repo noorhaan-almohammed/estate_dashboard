@@ -1,4 +1,5 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// App.tsx
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import DashboardLayout from "./layouts/DashboardLayout";
 import PropertiesPage from "./pages/dashboard/PropertiesPage";
 import PropertyPage from "./pages/PropertyPage";
@@ -16,12 +17,21 @@ import ReviewsPage from "./pages/dashboard/ReviewsPage";
 import ReviewPage from "./pages/ReviewPage";
 import HomePage from "./pages/dashboard/HomePage";
 import FAQsPage from "./pages/dashboard/FAQsPage";
+import Login from "./Auth/Login";
+import ProtectedRoute from "./Auth/ProtectedRoute";
+
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<DashboardLayout />}>
+        <Route path="/login" element={<Login />} />
+        
+        <Route path="/" element={
+          <ProtectedRoute>
+            <DashboardLayout />
+          </ProtectedRoute>
+        }>
           <Route index element={<HomePage />} />
           <Route path="properties-dashboard" element={<PropertiesPage />} />
           <Route path={`property/:id`} element={<PropertyPage />} />
@@ -52,6 +62,8 @@ function App() {
           <Route path="reviews-dashboard" element={<ReviewsPage />} />
           <Route path={`review/:id`} element={<ReviewPage />} />
         </Route>
+        
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

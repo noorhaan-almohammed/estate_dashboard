@@ -1,4 +1,4 @@
-import { Link, NavLink, Outlet } from "react-router-dom";
+import { Link, NavLink, Outlet, useNavigate } from "react-router-dom";
 import { useState, useEffect, type JSX } from "react";
 import {
   FaHome,
@@ -13,7 +13,8 @@ import {
   FaBars,
   FaTimes,
   FaChevronLeft,
-  FaChevronRight
+  FaChevronRight,
+  FaSignOutAlt 
 } from "react-icons/fa";
 
 type NavItem = {
@@ -36,6 +37,7 @@ const links: NavItem[] = [
 export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleResize = () => {
@@ -53,6 +55,11 @@ export default function DashboardLayout() {
 
   const toggleSidebar = () => {
     setIsSidebarOpen(!isSidebarOpen);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem("isLoggedIn");
+    navigate("/login");
   };
 
   return (
@@ -114,6 +121,18 @@ export default function DashboardLayout() {
               </NavLink>
             ))}
           </nav>
+
+          <div className="mt-auto p-4 border-t border-gray-700">
+            <button
+              onClick={handleLogout}
+              className={`w-full flex items-center px-4 py-3 text-red-400 hover:bg-red-900/20 hover:text-red-300 rounded-lg transition-all duration-300 group ${
+                !isSidebarOpen ? "justify-center px-0" : ""
+              }`}
+            >
+              <FaSignOutAlt className={`${isSidebarOpen ? "mr-2" : ""} group-hover:scale-110 transition-transform`} />
+              {isSidebarOpen && <span className="text-sm whitespace-nowrap">Log Out</span>}
+            </button>
+          </div>
         </div>
       </aside>
 
