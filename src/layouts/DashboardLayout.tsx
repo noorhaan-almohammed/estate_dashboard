@@ -16,6 +16,8 @@ import {
   FaChevronRight,
   FaSignOutAlt 
 } from "react-icons/fa";
+import ChatButton from "../ChatBot/ChatButton";
+import ChatBot from "../ChatBot/ChatBot";
 
 type NavItem = {
   label: string;
@@ -38,7 +40,15 @@ export default function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   const navigate = useNavigate();
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
+  const closeChat = () => {
+    setIsChatOpen(false);
+  };
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -145,6 +155,9 @@ export default function DashboardLayout() {
           <Outlet />
         </div>
       </main>
+       <ChatButton onClick={toggleChat} />
+      
+       <ChatBot isOpen={isChatOpen} onClose={closeChat} />
     </div>
   );
 }
