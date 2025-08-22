@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { db } from "../../firebaseConfig";
 import {
   collection,
@@ -20,12 +20,8 @@ interface FAQ {
 
 
 export default function FAQsPage() {
-  
-  const [isLoading, setIsLoading] = useState(true);
-  const [faqs, setFaqs] = useState<FAQ[]>([]);
 
   useEffect(() => {
-    setIsLoading(true);
     const faqsRef = collection(db, "faqs");
     const q = query(faqsRef, orderBy("createdAt", "desc"));
 
@@ -36,12 +32,9 @@ export default function FAQsPage() {
         snapshot.forEach((doc) => {
           items.push({ id: doc.id, ...doc.data() } as FAQ);
         });
-        setFaqs(items);
-        setIsLoading(false);
       },
       (error) => {
         console.error("Error fetching FAQs:", error);
-        setIsLoading(false);
       }
     );
 

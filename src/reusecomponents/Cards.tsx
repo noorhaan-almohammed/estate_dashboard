@@ -485,15 +485,15 @@ export default function Card({
     >
       <motion.div
         className={getCardClasses()}
-        variants={hoverEffect ? { ...cardVariants, ...hoverVariants } : cardVariants}
+        // variants={hoverEffect ? { ...cardVariants, ...hoverVariants } : cardVariants}
         initial="hidden"
         animate="visible"
         whileHover={!isFlipped ? "hover" : undefined}
-        animate={isFlipped ? "back" : "front"}
-        variants={{
-          front: { rotateY: 0 },
-          back: { rotateY: 180 }
-        }}
+        // animate={isFlipped ? "back" : "front"}
+        // variants={{
+        //   front: { rotateY: 0 },
+        //   back: { rotateY: 180 }
+        // }}
         transition={{ duration: 0.6, ease: "easeInOut" }}
         layout
       >
