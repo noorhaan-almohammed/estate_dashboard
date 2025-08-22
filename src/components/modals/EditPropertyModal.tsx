@@ -17,7 +17,7 @@ interface Property {
   tag_description: string;
   down_payment: number;
   mortgage_amount: number;
-  mortgage_fees: number;
+  mortgage_fees: string;
   monthly_taxes: number;
   expense_taxes: number;
   expense_mortgage: string;
@@ -59,7 +59,7 @@ export default function EditPropertyModal({
     { name: "build_year", type: "number", placeholder: "Build Year" },
     { name: "down_payment", type: "number", placeholder: "Down Payment" },
     { name: "mortgage_amount", type: "number", placeholder: "Mortgage Amount" },
-    { name: "mortgage_fees", type: "number", placeholder: "Mortgage Fees" },
+    { name: "mortgage_fees", type: "text", placeholder: "Mortgage Fees" },
     { name: "monthly_taxes", type: "number", placeholder: "Monthly Taxes" },
     { name: "expense_taxes", type: "number", placeholder: "Expense Taxes" },
     { name: "expense_insurance", type: "number", placeholder: "Expense Insurance" },
