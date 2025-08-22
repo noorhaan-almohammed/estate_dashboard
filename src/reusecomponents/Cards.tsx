@@ -65,34 +65,34 @@ export default function Card({
   cardStyle = "default",
   hoverEffect = true,
   className = "",
-  index = 0,
+  // index = 0,
 }: CardProps) {
   const [isFlipped, setIsFlipped] = useState(false);
   const [showFullDescription, setShowFullDescription] = useState(false);
 
-  const cardVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        delay: index * 0.1,
-        duration: 0.5,
-        ease: "easeOut"
-      }
-    }
-  };
+  // const cardVariants = {
+  //   hidden: { opacity: 0, y: 20 },
+  //   visible: {
+  //     opacity: 1,
+  //     y: 0,
+  //     transition: {
+  //       delay: index * 0.1,
+  //       duration: 0.5,
+  //       ease: "easeOut"
+  //     }
+  //   }
+  // };
 
-  const hoverVariants = {
-    hover: {
-      scale: 1.03,
-      boxShadow: "0 10px 25px -5px rgba(112, 59, 247, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
-      transition: { 
-        duration: 0.3,
-        ease: "easeOut"
-      }
-    }
-  };
+  // const hoverVariants = {
+  //   hover: {
+  //     scale: 1.03,
+  //     boxShadow: "0 10px 25px -5px rgba(112, 59, 247, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.1)",
+  //     transition: { 
+  //       duration: 0.3,
+  //       ease: "easeOut"
+  //     }
+  //   }
+  // };
 
   const getImageClasses = () => {
     let classes = "object-cover transition-transform duration-300 ";
