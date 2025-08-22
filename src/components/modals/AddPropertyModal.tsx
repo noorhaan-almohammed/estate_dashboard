@@ -61,25 +61,25 @@ export default function AddPropertyModal({
   };
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-  const files = e.target.files;
-  if (!files) return;
+    const files = e.target.files;
+    if (!files) return;
 
-  setUploading(true);
-  const urls: string[] = [];
+    setUploading(true);
+    const urls: string[] = [];
 
-  try {
-    for (const file of Array.from(files)) {
-      const url = await uploadToCloudinary(file);
-      urls.push(url);
+    try {
+      for (const file of Array.from(files)) {
+        const url = await uploadToCloudinary(file);
+        urls.push(url);
+      }
+      setImageUrls((prev) => [...prev, ...urls]);
+    } catch (err) {
+      console.error("Image upload error:", err);
+      alert("Image upload failed. Please try again.");
+    } finally {
+      setUploading(false);
     }
-    setImageUrls((prev) => [...prev, ...urls]);
-  } catch (err) {
-    console.error("Image upload error:", err);
-    alert("Image upload failed. Please try again.");
-  } finally {
-    setUploading(false);
-  }
-};
+  };
 
 
   const handleRemoveImage = (index: number) => {
