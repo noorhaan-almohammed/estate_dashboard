@@ -97,7 +97,7 @@ export default function DashboardLayout() {
             </h1>
             <button
               onClick={toggleSidebar}
-              className="hidden md:block text-mainText hover:text-mainPurple focus:outline-none ml-1"
+              className="hidden md:block text-mainText hover:text-mainPurple focus:outline-none ml-1 cursor-pointer"
             >
               {isSidebarOpen ? <FaChevronLeft size={14} /> : <FaChevronRight size={14} />}
             </button>
@@ -122,10 +122,10 @@ export default function DashboardLayout() {
             ))}
           </nav>
 
-          <div className="mt-auto p-4 border-t border-gray-700">
+          <div className="mt-auto p-4 border-t border-gray-700 cursor-pointer">
             <button
               onClick={handleLogout}
-              className={`w-full flex items-center px-4 py-3 text-red-400 hover:bg-red-900/20 hover:text-red-300 rounded-lg transition-all duration-300 group ${
+              className={`w-full flex items-center p-2  text-red-400 hover:bg-red-900/20 hover:text-red-300 rounded-lg transition-all duration-300 group cursor-pointer ${
                 !isSidebarOpen ? "justify-center px-0" : ""
               }`}
             >
